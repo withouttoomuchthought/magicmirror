@@ -1,0 +1,1082 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>magicmirror 🪞✨</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #FFE5F1 0%, #E5D9F2 50%, #D5F0F8 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+            color: #5A4D6D;
+        }
+
+        /* 3D FLOATING CLOUDS CANVAS */
+        #cloudsCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        /* PARTICLE SPARKLES */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 2;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.9), transparent);
+            border-radius: 50%;
+            animation: float-up linear infinite;
+            opacity: 0;
+        }
+
+        @keyframes float-up {
+            0% {
+                opacity: 0;
+                transform: translateY(0) scale(0);
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(-100vh) scale(1.5);
+            }
+        }
+
+        /* MAIN CONTAINER */
+        .container {
+            position: relative;
+            z-index: 3;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 30px 20px;
+        }
+
+        /* GLASSMORPHISM CARD BASE */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.35);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            border-radius: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 
+                0 30px 60px rgba(149, 108, 186, 0.15),
+                0 10px 30px rgba(149, 108, 186, 0.1),
+                inset 0 1px 0 rgba(255, 255, 255, 0.8);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .glass-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, 
+                transparent, 
+                rgba(255, 255, 255, 0.3), 
+                transparent);
+            animation: shimmer 8s infinite;
+        }
+
+        @keyframes shimmer {
+            0%, 100% { left: -100%; }
+            50% { left: 100%; }
+        }
+
+        /* VIEWS */
+        .view {
+            width: 100%;
+            max-width: 420px;
+            position: relative;
+        }
+
+        .submission-view {
+            animation: float-in 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .submission-view.hidden {
+            display: none;
+        }
+
+        @keyframes float-in {
+            0% {
+                opacity: 0;
+                transform: translateY(30px) scale(0.95);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        /* LOGO */
+        .logo {
+            text-align: center;
+            margin-bottom: 20px;
+            animation: glow-pulse 4s ease-in-out infinite;
+        }
+
+        .logo-text {
+            font-family: Georgia, serif;
+            font-size: 2.8em;
+            font-weight: 300;
+            text-transform: lowercase;
+            background: linear-gradient(135deg, #B794F6 0%, #9F7AEA 50%, #B794F6 100%);
+            background-size: 200% 200%;
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: gradient-shift 3s ease infinite;
+            text-shadow: 0 0 30px rgba(183, 148, 246, 0.3);
+        }
+
+        @keyframes gradient-shift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        @keyframes glow-pulse {
+            0%, 100% {
+                filter: drop-shadow(0 0 10px rgba(183, 148, 246, 0.3));
+            }
+            50% {
+                filter: drop-shadow(0 0 20px rgba(183, 148, 246, 0.6));
+            }
+        }
+
+        .logo-emoji {
+            font-size: 1.1em;
+            margin-left: 10px;
+            display: inline-block;
+            animation: spin-gentle 4s ease-in-out infinite;
+        }
+
+        @keyframes spin-gentle {
+            0%, 100% { transform: rotate(0deg); }
+            50% { transform: rotate(5deg); }
+        }
+
+        .tagline {
+            text-align: center;
+            font-size: 1em;
+            color: rgba(90, 77, 109, 0.8);
+            margin-bottom: 30px;
+            font-style: italic;
+            text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
+        }
+
+        /* INPUT CARD */
+        .input-card {
+            padding: 35px 30px;
+            position: relative;
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 200px;
+            padding: 25px;
+            border: none;
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(10px);
+            font-family: Georgia, serif;
+            font-size: 1.1em;
+            line-height: 1.8;
+            resize: none;
+            color: #5A4D6D;
+            box-shadow: 
+                inset 0 2px 10px rgba(149, 108, 186, 0.1),
+                0 1px 0 rgba(255, 255, 255, 0.8);
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            -webkit-appearance: none;
+        }
+
+        textarea:focus {
+            outline: none;
+            background: rgba(255, 255, 255, 0.8);
+            box-shadow: 
+                inset 0 2px 15px rgba(149, 108, 186, 0.15),
+                0 0 0 3px rgba(183, 148, 246, 0.2),
+                0 1px 0 rgba(255, 255, 255, 0.9);
+            transform: scale(1.01);
+        }
+
+        textarea::placeholder {
+            color: rgba(90, 77, 109, 0.5);
+            font-style: italic;
+        }
+
+        /* NEUMORPHIC BUTTON */
+        .submit-btn {
+            margin-top: 25px;
+            padding: 18px 50px;
+            background: linear-gradient(135deg, #B794F6 0%, #9F7AEA 100%);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            text-transform: lowercase;
+            width: 100%;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 
+                0 10px 30px rgba(159, 122, 234, 0.4),
+                0 5px 15px rgba(159, 122, 234, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.3);
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .submit-btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 
+                0 15px 40px rgba(159, 122, 234, 0.5),
+                0 8px 20px rgba(159, 122, 234, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.4);
+        }
+
+        .submit-btn:active {
+            transform: scale(0.98);
+        }
+
+        .submit-btn:active::before {
+            width: 400px;
+            height: 400px;
+        }
+
+        /* FOOTER NOTE */
+        .footer-note {
+            margin-top: 25px;
+            text-align: center;
+            font-size: 0.9em;
+            color: rgba(90, 77, 109, 0.7);
+            font-style: italic;
+            line-height: 1.7;
+            text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
+        }
+
+        /* LOADING VIEW */
+        .loading-view {
+            display: none;
+            text-align: center;
+            padding: 60px 40px;
+        }
+
+        .loading-view.active {
+            display: block;
+            animation: float-in 0.6s ease;
+        }
+
+        .breathing-circle {
+            width: 100px;
+            height: 100px;
+            margin: 0 auto 30px;
+            border-radius: 50%;
+            background: radial-gradient(circle, 
+                rgba(183, 148, 246, 0.4) 0%, 
+                rgba(159, 122, 234, 0.2) 50%,
+                transparent 100%);
+            position: relative;
+            animation: breathe 3s ease-in-out infinite;
+        }
+
+        .breathing-circle::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 60%;
+            height: 60%;
+            background: white;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            box-shadow: 
+                0 0 20px rgba(183, 148, 246, 0.3),
+                inset 0 0 10px rgba(183, 148, 246, 0.2);
+        }
+
+        @keyframes breathe {
+            0%, 100% {
+                transform: scale(1);
+                opacity: 0.6;
+            }
+            50% {
+                transform: scale(1.2);
+                opacity: 1;
+            }
+        }
+
+        .loading-text {
+            font-size: 1.2em;
+            color: #7C6B93;
+            font-style: italic;
+            margin-bottom: 15px;
+        }
+
+        .loading-emoji {
+            font-size: 2em;
+            animation: float-gentle 3s ease-in-out infinite;
+        }
+
+        @keyframes float-gentle {
+            0%, 100% {
+                transform: translateY(0px);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        /* RESULT VIEW */
+        .result-view {
+            display: none;
+        }
+
+        .result-view.active {
+            display: block;
+            animation: bloom 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        @keyframes bloom {
+            0% {
+                opacity: 0;
+                transform: scale(0.8) translateY(30px);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        .result-card {
+            padding: 35px 30px;
+            position: relative;
+        }
+
+        .section-label {
+            font-size: 0.85em;
+            text-transform: lowercase;
+            color: rgba(90, 77, 109, 0.6);
+            margin-bottom: 12px;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+        }
+
+        .user-input-box {
+            font-family: Georgia, serif;
+            font-size: 0.95em;
+            line-height: 1.7;
+            color: #7C6B93;
+            font-style: italic;
+            padding: 20px;
+            background: rgba(183, 148, 246, 0.08);
+            border-radius: 15px;
+            border-left: 3px solid #B794F6;
+            margin-bottom: 25px;
+            box-shadow: inset 0 1px 3px rgba(183, 148, 246, 0.1);
+        }
+
+        .divider {
+            border: none;
+            height: 1px;
+            background: linear-gradient(90deg, 
+                transparent, 
+                rgba(183, 148, 246, 0.3), 
+                transparent);
+            margin: 25px 0;
+        }
+
+        .transformed-box {
+            font-family: Georgia, serif;
+            font-size: 1.15em;
+            line-height: 1.9;
+            color: #5A4D6D;
+            padding: 30px;
+            background: linear-gradient(135deg, 
+                rgba(255, 229, 241, 0.6) 0%,
+                rgba(229, 217, 242, 0.6) 50%,
+                rgba(213, 240, 248, 0.6) 100%);
+            border-radius: 20px;
+            font-style: italic;
+            white-space: pre-line;
+            margin-bottom: 20px;
+            box-shadow: 
+                0 8px 32px rgba(183, 148, 246, 0.15),
+                inset 0 1px 0 rgba(255, 255, 255, 0.8);
+            position: relative;
+            animation: gentle-glow 4s ease-in-out infinite;
+        }
+
+        @keyframes gentle-glow {
+            0%, 100% {
+                box-shadow: 
+                    0 8px 32px rgba(183, 148, 246, 0.15),
+                    inset 0 1px 0 rgba(255, 255, 255, 0.8);
+            }
+            50% {
+                box-shadow: 
+                    0 12px 40px rgba(183, 148, 246, 0.25),
+                    0 0 30px rgba(183, 148, 246, 0.1),
+                    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+            }
+        }
+
+        .signature {
+            font-size: 0.75em;
+            color: rgba(90, 77, 109, 0.5);
+            font-style: italic;
+            text-align: center;
+            padding-top: 15px;
+            border-top: 1px solid rgba(183, 148, 246, 0.2);
+        }
+
+        .disclaimer {
+            font-size: 0.75em;
+            color: rgba(90, 77, 109, 0.6);
+            font-style: italic;
+            text-align: center;
+            margin-top: 15px;
+            line-height: 1.5;
+        }
+
+        /* ACTION BUTTONS */
+        .action-buttons {
+            margin-top: 25px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .action-btn {
+            padding: 18px 20px;
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(183, 148, 246, 0.3);
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            text-align: left;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            box-shadow: 
+                0 4px 15px rgba(183, 148, 246, 0.1),
+                inset 0 1px 0 rgba(255, 255, 255, 0.9);
+        }
+
+        .action-btn:hover {
+            transform: translateY(-2px);
+            background: rgba(255, 255, 255, 0.9);
+            border-color: rgba(183, 148, 246, 0.5);
+            box-shadow: 
+                0 8px 25px rgba(183, 148, 246, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 1);
+        }
+
+        .action-btn:active {
+            transform: scale(0.98);
+        }
+
+        .action-icon {
+            font-size: 1.5em;
+            flex-shrink: 0;
+        }
+
+        .action-content {
+            flex: 1;
+        }
+
+        .action-title {
+            font-weight: 600;
+            font-size: 1em;
+            margin-bottom: 3px;
+            text-transform: lowercase;
+            color: #5A4D6D;
+        }
+
+        .action-desc {
+            font-size: 0.85em;
+            color: rgba(90, 77, 109, 0.7);
+            font-style: italic;
+        }
+
+        .try-again-btn {
+            margin-top: 20px;
+            padding: 16px 40px;
+            background: transparent;
+            color: #7C6B93;
+            border: 2px solid rgba(183, 148, 246, 0.4);
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            text-transform: lowercase;
+            width: 100%;
+            font-size: 1em;
+            font-weight: 500;
+        }
+
+        .try-again-btn:hover {
+            background: rgba(183, 148, 246, 0.1);
+            border-color: rgba(183, 148, 246, 0.6);
+            color: #5A4D6D;
+        }
+
+        .try-again-btn:active {
+            transform: scale(0.98);
+        }
+
+        /* WTMT LINK */
+        .wtmt-link {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 10;
+            font-size: 0.75em;
+            color: rgba(90, 77, 109, 0.5);
+            text-decoration: none;
+            font-style: italic;
+            text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
+            transition: all 0.3s ease;
+        }
+
+        .wtmt-link:hover {
+            color: #7C6B93;
+            text-shadow: 0 2px 4px rgba(183, 148, 246, 0.3);
+        }
+
+        /* MOBILE RESPONSIVE */
+        @media (max-width: 480px) {
+            .logo-text {
+                font-size: 2.2em;
+            }
+            
+            .input-card, .result-card {
+                padding: 30px 25px;
+            }
+            
+            textarea {
+                min-height: 170px;
+                font-size: 1em;
+            }
+            
+            .transformed-box {
+                font-size: 1.05em;
+                padding: 25px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 3D CLOUDS CANVAS -->
+    <canvas id="cloudsCanvas"></canvas>
+
+    <!-- PARTICLE SPARKLES -->
+    <div class="particles" id="particles"></div>
+
+    <div class="container">
+        <div class="view">
+            
+            <!-- SUBMISSION VIEW -->
+            <div id="submissionView" class="submission-view">
+                <div class="logo">
+                    <span class="logo-text">magicmirror</span><span class="logo-emoji">🪞✨</span>
+                </div>
+                <p class="tagline">
+                    your truth, transformed withouttoomuchthought.
+                </p>
+
+                <div class="glass-card input-card">
+                    <textarea 
+                        id="userInput" 
+                        placeholder="what's on your heart?" 
+                        maxlength="500"
+                    ></textarea>
+                    <button class="submit-btn" onclick="submitThought()">
+                        transform 🪞✨
+                    </button>
+                </div>
+
+                <p class="footer-note">
+                    write whatever you're feeling.<br>
+                    no filter. no perfection.<br>
+                    this is a safe space to be honest.<br><br>
+                    anonymous. safe. free. 💛
+                </p>
+            </div>
+
+            <!-- LOADING VIEW -->
+            <div id="loadingView" class="loading-view glass-card">
+                <div class="breathing-circle"></div>
+                <p class="loading-text">holding your words gently...</p>
+                <div class="loading-emoji">🪞✨</div>
+            </div>
+
+            <!-- RESULT VIEW -->
+            <div id="resultView" class="result-view">
+                <div class="glass-card result-card">
+                    <div class="section-label">you wrote:</div>
+                    <div class="user-input-box" id="userInputDisplay"></div>
+                    
+                    <div class="divider"></div>
+                    
+                    <div class="section-label">here's what we hear you saying 🪞✨</div>
+                    <div class="transformed-box" id="transformedText"></div>
+                    <div class="signature">
+                        transformed with love by magicmirror | @withouttoomuchthought 🪞✨
+                    </div>
+                    
+                    <p class="disclaimer">
+                        these reflections come from ai. take what resonates, leave what doesn't. trust your own truth first 💛
+                    </p>
+
+                    <div class="action-buttons">
+                        <button class="action-btn" onclick="shareToSocial()">
+                            <div class="action-icon">🌸</div>
+                            <div class="action-content">
+                                <div class="action-title">share your truth</div>
+                                <div class="action-desc">tiktok story, instagram, anywhere you want</div>
+                            </div>
+                        </button>
+
+                        <button class="action-btn" onclick="downloadArt()">
+                            <div class="action-icon">🎨</div>
+                            <div class="action-content">
+                                <div class="action-title">download as art</div>
+                                <div class="action-desc">save this as a beautiful reminder</div>
+                            </div>
+                        </button>
+                    </div>
+
+                    <button class="try-again-btn" onclick="tryAgain()">
+                        share another truth 🪞
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <a href="https://www.withouttoomuchthought.com" class="wtmt-link">withouttoomuchthought.com</a>
+
+    <script>
+        // ==========================================
+        // 3D FLOATING CLOUDS SYSTEM
+        // ==========================================
+        
+        const canvas = document.getElementById('cloudsCanvas');
+        const ctx = canvas.getContext('2d');
+        
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+        
+        class Cloud {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 100 + 80;
+                this.speedX = (Math.random() - 0.5) * 0.3;
+                this.speedY = (Math.random() - 0.5) * 0.2;
+                this.opacity = Math.random() * 0.15 + 0.05;
+                this.color = this.randomCloudColor();
+            }
+            
+            randomCloudColor() {
+                const colors = [
+                    'rgba(255, 229, 241, {opacity})', // pink
+                    'rgba(229, 217, 242, {opacity})', // purple
+                    'rgba(213, 240, 248, {opacity})', // blue
+                    'rgba(255, 255, 255, {opacity})'  // white
+                ];
+                return colors[Math.floor(Math.random() * colors.length)];
+            }
+            
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+                
+                if (this.x > canvas.width + this.size) this.x = -this.size;
+                if (this.x < -this.size) this.x = canvas.width + this.size;
+                if (this.y > canvas.height + this.size) this.y = -this.size;
+                if (this.y < -this.size) this.y = canvas.height + this.size;
+            }
+            
+            draw() {
+                ctx.fillStyle = this.color.replace('{opacity}', this.opacity);
+                ctx.beginPath();
+                
+                // Draw soft cloud shape
+                ctx.arc(this.x, this.y, this.size * 0.5, 0, Math.PI * 2);
+                ctx.arc(this.x + this.size * 0.3, this.y - this.size * 0.2, this.size * 0.4, 0, Math.PI * 2);
+                ctx.arc(this.x - this.size * 0.3, this.y - this.size * 0.1, this.size * 0.35, 0, Math.PI * 2);
+                
+                ctx.fill();
+            }
+        }
+        
+        const clouds = [];
+        for (let i = 0; i < 15; i++) {
+            clouds.push(new Cloud());
+        }
+        
+        function animateClouds() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            clouds.forEach(cloud => {
+                cloud.update();
+                cloud.draw();
+            });
+            requestAnimationFrame(animateClouds);
+        }
+        
+        animateClouds();
+        
+        // ==========================================
+        // PARTICLE SPARKLE SYSTEM
+        // ==========================================
+        
+        const particlesContainer = document.getElementById('particles');
+        
+        function createParticle() {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.style.left = Math.random() * 100 + '%';
+            particle.style.animationDuration = (Math.random() * 3 + 4) + 's';
+            particle.style.animationDelay = Math.random() * 2 + 's';
+            particlesContainer.appendChild(particle);
+            
+            setTimeout(() => {
+                particle.remove();
+            }, 7000);
+        }
+        
+        setInterval(createParticle, 300);
+        
+        // ==========================================
+        // MAGICMIRROR LOGIC
+        // ==========================================
+        
+        let currentUserInput = '';
+        const WEBHOOK_URL = 'YOUR_MAKE_WEBHOOK_URL_HERE'; // 🚨 REPLACE THIS!
+        
+        async function submitThought() {
+            const input = document.getElementById('userInput').value.trim();
+            
+            if (!input) {
+                showCustomAlert('share something first, love 💛');
+                return;
+            }
+
+            currentUserInput = input;
+            
+            // Hide submission
+            document.getElementById('submissionView').classList.add('hidden');
+            
+            // Show loading
+            document.getElementById('loadingView').classList.add('active');
+            
+            try {
+                // Call Make.com webhook
+                const response = await fetch(WEBHOOK_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        original_text: input,
+                        user_ip: 'browser-session-' + Date.now()
+                    })
+                });
+
+                const data = await response.json();
+                
+                // Hide loading
+                document.getElementById('loadingView').classList.remove('active');
+
+                if (data.error) {
+                    // Show limit message
+                    showCustomAlert(data.message);
+                    document.getElementById('submissionView').classList.remove('hidden');
+                    return;
+                }
+                
+                // Show user's input
+                document.getElementById('userInputDisplay').innerText = `"${currentUserInput}"`;
+                
+                // Show AI transformation
+                document.getElementById('transformedText').innerText = data.transformed;
+                
+                // Show result with bloom animation
+                document.getElementById('resultView').classList.add('active');
+                
+                // Create celebration particles
+                createCelebrationBurst();
+
+            } catch (error) {
+                console.error('Error:', error);
+                document.getElementById('loadingView').classList.remove('active');
+                showCustomAlert('something went wrong. please try again 💛');
+                document.getElementById('submissionView').classList.remove('hidden');
+            }
+        }
+        
+        function createCelebrationBurst() {
+            for (let i = 0; i < 20; i++) {
+                setTimeout(() => createParticle(), i * 100);
+            }
+        }
+        
+        function showCustomAlert(message) {
+            // Using browser alert for now, can be replaced with custom modal
+            alert(message);
+        }
+        
+        async function shareToSocial() {
+            const canvas = createStoryCanvas();
+            
+            canvas.toBlob(async (blob) => {
+                // Try Web Share API first
+                if (navigator.share && navigator.canShare) {
+                    try {
+                        const file = new File([blob], 'magicmirror-truth.png', { type: 'image/png' });
+                        
+                        if (navigator.canShare({ files: [file] })) {
+                            await navigator.share({
+                                files: [file],
+                                title: 'my truth, transformed',
+                                text: 'shared from magicmirror 🪞✨'
+                            });
+                            
+                            setTimeout(() => {
+                                showCustomAlert('🌸 sharing complete!\n\nif you chose tiktok, tap "story" to share 💛');
+                            }, 300);
+                            return;
+                        }
+                    } catch (error) {
+                        console.log('Share cancelled:', error);
+                    }
+                }
+                
+                // Fallback: Download
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `magicmirror-${Date.now()}.png`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+                
+                setTimeout(() => {
+                    showCustomAlert('💛 image saved!\n\nopen tiktok → tap + → upload → select image → story\n\nshare your truth 🪞✨');
+                }, 100);
+            }, 'image/png', 0.95);
+        }
+
+        function downloadArt() {
+            const canvas = createStoryCanvas();
+            
+            canvas.toBlob((blob) => {
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `magicmirror-${Date.now()}.png`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+                
+                setTimeout(() => {
+                    showCustomAlert('🎨 your reflection has been saved!\n\nshare it if it speaks to you 💛');
+                }, 100);
+            }, 'image/png', 0.95);
+        }
+
+        function createStoryCanvas() {
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            
+            // TikTok Story dimensions (9:16)
+            canvas.width = 1080;
+            canvas.height = 1920;
+            
+            // Dreamy gradient background
+            const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+            gradient.addColorStop(0, '#FFE5F1');
+            gradient.addColorStop(0.5, '#E5D9F2');
+            gradient.addColorStop(1, '#D5F0F8');
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            // Soft texture overlay
+            ctx.globalAlpha = 0.03;
+            for (let i = 0; i < canvas.width; i += 3) {
+                ctx.strokeStyle = '#fff';
+                ctx.beginPath();
+                ctx.moveTo(i, 0);
+                ctx.lineTo(i, canvas.height);
+                ctx.stroke();
+            }
+            ctx.globalAlpha = 1;
+            
+            // Main card
+            const margin = 100;
+            const cardPadding = 60;
+            const cardX = margin;
+            const cardY = margin + 100;
+            const cardWidth = canvas.width - (margin * 2);
+            const cardHeight = canvas.height - (margin * 2) - 200;
+            
+            // Card shadow
+            ctx.shadowColor = 'rgba(149, 108, 186, 0.2)';
+            ctx.shadowBlur = 50;
+            ctx.shadowOffsetY = 25;
+            
+            // Card background (glassmorphism effect)
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.95)';
+            ctx.beginPath();
+            ctx.roundRect(cardX, cardY, cardWidth, cardHeight, 35);
+            ctx.fill();
+            ctx.shadowColor = 'transparent';
+            
+            // Get transformation text
+            const transformedText = document.getElementById('transformedText').innerText;
+            const lines = transformedText.split('\n').filter(line => line.trim());
+            
+            // Text styling
+            ctx.fillStyle = '#5A4D6D';
+            ctx.font = 'italic 40px Georgia, serif';
+            ctx.textAlign = 'left';
+            ctx.textBaseline = 'top';
+            
+            // Word wrap function
+            function wrapText(lines, x, y, maxWidth, lineHeight) {
+                let currentY = y;
+                
+                lines.forEach((line, index) => {
+                    const words = line.split(' ');
+                    let currentLine = '';
+                    
+                    words.forEach((word) => {
+                        const testLine = currentLine + word + ' ';
+                        const metrics = ctx.measureText(testLine);
+                        
+                        if (metrics.width > maxWidth && currentLine !== '') {
+                            ctx.fillText(currentLine.trim(), x, currentY);
+                            currentLine = word + ' ';
+                            currentY += lineHeight;
+                        } else {
+                            currentLine = testLine;
+                        }
+                    });
+                    
+                    ctx.fillText(currentLine.trim(), x, currentY);
+                    currentY += lineHeight;
+                    
+                    // Add spacing between paragraphs
+                    if (index < lines.length - 1 && lines[index + 1].trim() === '') {
+                        currentY += lineHeight * 0.5;
+                    }
+                });
+                
+                return currentY;
+            }
+            
+            const textX = cardX + cardPadding;
+            const textY = cardY + cardPadding;
+            const textMaxWidth = cardWidth - (cardPadding * 2);
+            const lineHeight = 55;
+            
+            wrapText(lines, textX, textY, textMaxWidth, lineHeight);
+            
+            // Divider line
+            ctx.strokeStyle = 'rgba(183, 148, 246, 0.3)';
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(cardX + 80, cardY + cardHeight - 140);
+            ctx.lineTo(cardX + cardWidth - 80, cardY + cardHeight - 140);
+            ctx.stroke();
+            
+            // Signature text
+            ctx.textAlign = 'center';
+            ctx.font = '26px Georgia, serif';
+            ctx.fillStyle = 'rgba(90, 77, 109, 0.7)';
+            ctx.fillText('transformed with love by magicmirror 🪞✨', 
+                canvas.width / 2, cardY + cardHeight - 95);
+            
+            ctx.font = '22px -apple-system, sans-serif';
+            ctx.fillStyle = 'rgba(90, 77, 109, 0.6)';
+            ctx.fillText('@withouttoomuchthought', 
+                canvas.width / 2, cardY + cardHeight - 55);
+            
+            return canvas;
+        }
+
+        function tryAgain() {
+            document.getElementById('resultView').classList.remove('active');
+            document.getElementById('submissionView').classList.remove('hidden');
+            document.getElementById('userInput').value = '';
+            currentUserInput = '';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Enter key to submit
+        document.getElementById('userInput').addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                submitThought();
+            }
+        });
+    </script>
+</body>
+</html>
