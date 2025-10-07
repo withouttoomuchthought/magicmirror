@@ -509,7 +509,12 @@
                     })
                 });
 
-                const data = await response.json();
+                const data = await response.text();
+// For now, just show success
+alert('✨ your truth has been transformed! check airtable to see it 💛');
+document.getElementById('loadingView').classList.remove('active');
+document.getElementById('submissionView').classList.remove('hidden');
+return;
                 
                 document.getElementById('loadingView').classList.remove('active');
 
