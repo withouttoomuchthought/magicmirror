@@ -1,0 +1,1759 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>magicmirror 🪞✨</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        @import url('https://fonts.googleapis.com/css2?family=Karla:wght@300;400;600&display=swap');
+
+        body {
+            font-family: 'Karla', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #1a0f2e;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+            color: #3A3A3A;
+            cursor: none;
+        }
+
+        /* ✨ CUSTOM CURSOR SYSTEM */
+        .custom-cursor {
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.9);
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+            transition: all 0.15s ease;
+            backdrop-filter: blur(5px);
+            box-shadow: 0 0 20px rgba(212, 197, 226, 0.6);
+            mix-blend-mode: difference;
+        }
+
+        .cursor-follower {
+            width: 40px;
+            height: 40px;
+            border: 1px solid rgba(212, 197, 226, 0.4);
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 9998;
+            transition: all 0.3s ease;
+        }
+
+        /* Hide cursor on mobile/touch devices */
+        @media (hover: none) and (pointer: coarse) {
+            body {
+                cursor: auto !important;
+            }
+            .custom-cursor,
+            .cursor-follower {
+                display: none !important;
+            }
+        }
+
+        /* 🌊 LIQUID GRADIENT BACKGROUND */
+        .gradient-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, 
+                #FFE5F1 0%, 
+                #E5D9F2 20%, 
+                #D5F0F8 40%, 
+                #E5D9F2 60%, 
+                #FFE5F1 80%, 
+                #F9E4C8 100%);
+            background-size: 400% 400%;
+            animation: gradientFlow 20s ease infinite;
+            z-index: 1;
+        }
+
+        @keyframes gradientFlow {
+            0%, 100% { background-position: 0% 50%; }
+            25% { background-position: 50% 100%; }
+            50% { background-position: 100% 50%; }
+            75% { background-position: 50% 0%; }
+        }
+
+        /* 💫 AURORA LIGHT BEAMS */
+        .aurora {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 2;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .aurora-beam {
+            position: absolute;
+            width: 200%;
+            height: 2px;
+            background: linear-gradient(90deg, 
+                transparent, 
+                rgba(255, 255, 255, 0.4), 
+                transparent);
+            filter: blur(1.5px);
+            animation: auroraMove linear infinite;
+            opacity: 0;
+        }
+
+        @keyframes auroraMove {
+            0% {
+                opacity: 0;
+                transform: translateX(-100%) translateY(0) rotate(-15deg);
+            }
+            15% {
+                opacity: 1;
+            }
+            85% {
+                opacity: 1;
+            }
+            100% {
+                opacity: 0;
+                transform: translateX(100%) translateY(100vh) rotate(-15deg);
+            }
+        }
+
+        /* 🌀 RIPPLE EFFECT CANVAS */
+        #rippleCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 3;
+        }
+
+        /* ☁️ 3-LAYER PARALLAX CLOUDS */
+        .cloud-layer {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .cloud-layer.back { z-index: 4; }
+        .cloud-layer.mid { z-index: 5; }
+        .cloud-layer.front { z-index: 6; }
+
+        .parallax-cloud {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(12px);
+            border-radius: 50% 40% 45% 55% / 55% 45% 50% 50%;
+            box-shadow: 
+                inset 0 2px 8px rgba(255, 255, 255, 0.3),
+                0 4px 16px rgba(0, 0, 0, 0.05);
+            animation: driftParallax linear infinite;
+        }
+
+        /* Back layer - slowest, smallest, most transparent */
+        .cloud-layer.back .parallax-cloud {
+            opacity: 0.3;
+            filter: blur(3px);
+        }
+
+        /* Mid layer - medium everything */
+        .cloud-layer.mid .parallax-cloud {
+            opacity: 0.5;
+            filter: blur(2px);
+        }
+
+        /* Front layer - fastest, largest, most visible */
+        .cloud-layer.front .parallax-cloud {
+            opacity: 0.7;
+            filter: blur(1px);
+        }
+
+        @keyframes driftParallax {
+            0% {
+                transform: translateX(-10%) translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: var(--cloud-opacity);
+            }
+            90% {
+                opacity: var(--cloud-opacity);
+            }
+            100% {
+                transform: translateX(var(--cloud-drift)) translateY(-100px) rotate(var(--cloud-rotate));
+                opacity: 0;
+            }
+        }
+
+        /* 💭 HEALING QUOTE CLOUDS (front layer only) */
+        .quote-cloud {
+            position: absolute;
+            font-family: 'Georgia', serif;
+            font-style: italic;
+            font-size: 0.7em;
+            color: rgba(58, 58, 58, 0.35);
+            padding: 14px 18px;
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(15px);
+            border-radius: 45% 55% 50% 50% / 50% 45% 55% 50%;
+            box-shadow: 
+                inset 0 2px 8px rgba(255, 255, 255, 0.4),
+                0 4px 16px rgba(0, 0, 0, 0.06);
+            max-width: 200px;
+            line-height: 1.5;
+            animation: driftQuoteCloud linear infinite;
+            white-space: pre-line;
+        }
+
+        @keyframes driftQuoteCloud {
+            0% {
+                transform: translateX(-5%) translateY(100vh) rotate(0deg) scale(0.9);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.85;
+            }
+            90% {
+                opacity: 0.85;
+            }
+            100% {
+                transform: translateX(var(--quote-drift)) translateY(-80px) rotate(var(--quote-rotate)) scale(1);
+                opacity: 0;
+            }
+        }
+
+        /* 🌟 3-TIER PARTICLE SYSTEM */
+        .particle-system {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 7;
+            overflow: hidden;
+        }
+
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            animation: floatParticle linear infinite;
+        }
+
+        /* Slow particles - gentle white sparkles */
+        .particle.slow {
+            width: 2px;
+            height: 2px;
+            background: rgba(255, 255, 255, 0.6);
+            box-shadow: 0 0 3px rgba(255, 255, 255, 0.8);
+        }
+
+        /* Fast particles - medium purple stars */
+        .particle.fast {
+            width: 3px;
+            height: 3px;
+            background: rgba(212, 197, 226, 0.7);
+            box-shadow: 0 0 5px rgba(212, 197, 226, 0.9);
+        }
+
+        /* Glow particles - large celebration sparkles */
+        .particle.glow {
+            width: 5px;
+            height: 5px;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.9), rgba(249, 228, 166, 0.5));
+            box-shadow: 0 0 10px rgba(249, 228, 166, 0.8);
+        }
+
+        @keyframes floatParticle {
+            0% {
+                transform: translateY(100vh) translateX(0) scale(0) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100px) translateX(var(--particle-drift)) scale(1) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* 📱 MAIN CONTAINER WITH 3D TRANSFORM */
+        .container {
+            width: 100%;
+            max-width: 520px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 10;
+            padding: 20px;
+            transform-style: preserve-3d;
+            transition: transform 0.1s ease-out;
+        }
+
+        /* 🎭 VIEW STATES */
+        .view {
+            text-align: center;
+            animation: viewBloom 1s cubic-bezier(0.34, 1.56, 0.64, 1);
+            transform-origin: center;
+        }
+
+        .view.hidden {
+            display: none;
+        }
+
+        @keyframes viewBloom {
+            0% {
+                opacity: 0;
+                transform: scale(0.8) translateY(40px);
+                filter: blur(10px);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+                filter: blur(0);
+            }
+        }
+
+        /* 🪞 LOGO & BRANDING WITH FLOAT */
+        .logo {
+            font-family: 'Georgia', serif;
+            font-size: 2.8em;
+            font-weight: 300;
+            text-transform: lowercase;
+            margin-bottom: 12px;
+            color: #3A3A3A;
+            text-shadow: 
+                0 2px 8px rgba(255, 255, 255, 0.9),
+                0 0 40px rgba(212, 197, 226, 0.4);
+            letter-spacing: -0.5px;
+            animation: logoFloat 4s ease-in-out infinite;
+        }
+
+        @keyframes logoFloat {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-8px);
+            }
+        }
+
+        .emoji {
+            font-size: 1.1em;
+            margin-left: 8px;
+            display: inline-block;
+            animation: emojiRotate 5s ease-in-out infinite;
+        }
+
+        @keyframes emojiRotate {
+            0%, 100% {
+                transform: scale(1) rotate(0deg);
+                filter: brightness(1) drop-shadow(0 0 8px rgba(212, 197, 226, 0.5));
+            }
+            50% {
+                transform: scale(1.15) rotate(10deg);
+                filter: brightness(1.3) drop-shadow(0 0 15px rgba(249, 228, 166, 0.7));
+            }
+        }
+
+        .tagline {
+            font-size: 1em;
+            line-height: 1.6;
+            margin-bottom: 40px;
+            opacity: 0;
+            animation: fadeUp 1s ease 0.3s forwards;
+            color: rgba(58, 58, 58, 0.8);
+        }
+
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(15px);
+            }
+            to {
+                opacity: 0.8;
+                transform: translateY(0);
+            }
+        }
+
+        /* 💎 GLASSMORPHIC CARDS WITH 3D TILT */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.4);
+            backdrop-filter: blur(25px) saturate(180%);
+            border-radius: 30px;
+            padding: 38px 32px;
+            box-shadow: 
+                0 12px 40px rgba(0, 0, 0, 0.1),
+                0 2px 8px rgba(0, 0, 0, 0.05),
+                inset 0 1px 0 rgba(255, 255, 255, 0.7),
+                inset 0 -1px 0 rgba(0, 0, 0, 0.05);
+            position: relative;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            transform-style: preserve-3d;
+            transition: transform 0.1s ease-out;
+            overflow: hidden;
+        }
+
+        /* Shimmer effect across glass cards */
+        .glass-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(
+                45deg,
+                transparent 30%,
+                rgba(255, 255, 255, 0.3) 50%,
+                transparent 70%
+            );
+            animation: shimmerSweep 8s ease-in-out infinite;
+            pointer-events: none;
+        }
+
+        @keyframes shimmerSweep {
+            0%, 100% {
+                transform: translateX(-100%) translateY(-100%);
+            }
+            50% {
+                transform: translateX(100%) translateY(100%);
+            }
+        }
+
+        /* Gradient highlight on top edge */
+        .glass-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 40%;
+            background: linear-gradient(180deg, 
+                rgba(255, 255, 255, 0.3) 0%, 
+                rgba(255, 255, 255, 0) 100%);
+            border-radius: 30px 30px 0 0;
+            pointer-events: none;
+        }
+
+        /* 📝 TEXTAREA WITH LIQUID BORDER */
+        textarea {
+            width: 100%;
+            min-height: 180px;
+            padding: 24px;
+            border: none;
+            border-radius: 22px;
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(12px);
+            font-family: 'Georgia', serif;
+            font-size: 1.05em;
+            line-height: 1.9;
+            resize: none;
+            color: #3A3A3A;
+            box-shadow: 
+                inset 0 3px 15px rgba(0, 0, 0, 0.06),
+                inset 0 1px 0 rgba(255, 255, 255, 0.9);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            -webkit-appearance: none;
+            position: relative;
+            z-index: 1;
+        }
+
+        textarea:focus {
+            outline: none;
+            background: rgba(255, 255, 255, 0.85);
+            box-shadow: 
+                inset 0 3px 20px rgba(184, 197, 176, 0.15),
+                inset 0 1px 0 rgba(255, 255, 255, 1),
+                0 0 0 4px rgba(212, 197, 226, 0.25),
+                0 8px 24px rgba(212, 197, 226, 0.2);
+            transform: scale(1.01);
+        }
+
+        textarea::placeholder {
+            color: rgba(58, 58, 58, 0.35);
+            font-style: italic;
+        }
+
+        /* ✨ LIQUID FLOW SUBMIT BUTTON */
+        .submit-btn {
+            margin-top: 26px;
+            padding: 20px 55px;
+            background: linear-gradient(135deg, 
+                #D4C5E2 0%, 
+                #B8C5B0 50%, 
+                #D4C5E2 100%);
+            background-size: 200% 200%;
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.15em;
+            font-weight: 600;
+            cursor: pointer;
+            text-transform: lowercase;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 
+                0 10px 30px rgba(184, 197, 176, 0.4),
+                0 2px 8px rgba(0, 0, 0, 0.1),
+                inset 0 1px 0 rgba(255, 255, 255, 0.4);
+            width: 100%;
+            -webkit-appearance: none;
+            position: relative;
+            overflow: hidden;
+            letter-spacing: 0.5px;
+            animation: liquidFlow 3s ease infinite;
+        }
+
+        @keyframes liquidFlow {
+            0%, 100% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+        }
+
+        .submit-btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.5);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 
+                0 15px 40px rgba(184, 197, 176, 0.5),
+                0 5px 15px rgba(0, 0, 0, 0.15),
+                inset 0 1px 0 rgba(255, 255, 255, 0.5);
+        }
+
+        .submit-btn:active::before {
+            width: 500px;
+            height: 500px;
+        }
+
+        .submit-btn:active {
+            transform: scale(0.98) translateY(0);
+        }
+
+        /* 💛 FOOTER NOTE */
+        .footer-note {
+            margin-top: 38px;
+            font-size: 0.9em;
+            color: rgba(58, 58, 58, 0.55);
+            font-style: italic;
+            line-height: 1.9;
+            text-shadow: 0 1px 3px rgba(255, 255, 255, 0.9);
+            opacity: 0;
+            animation: fadeUp 1s ease 0.6s forwards;
+        }
+
+        /* 🌀 LOADING VIEW WITH BREATHING CIRCLE */
+        .loading-view {
+            display: none;
+            text-align: center;
+            animation: viewBloom 0.8s ease;
+        }
+
+        .loading-view.active {
+            display: block;
+        }
+
+        .breathing-circle {
+            width: 140px;
+            height: 140px;
+            margin: 0 auto 35px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, 
+                rgba(255, 255, 255, 0.4), 
+                rgba(212, 197, 226, 0.3));
+            backdrop-filter: blur(20px);
+            box-shadow: 
+                inset 0 0 30px rgba(255, 255, 255, 0.5),
+                0 10px 40px rgba(212, 197, 226, 0.3);
+            animation: breathePulse 3.5s ease-in-out infinite;
+            position: relative;
+        }
+
+        .breathing-circle::before {
+            content: '🪞';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 3.5em;
+            animation: mirrorGlow 2s ease-in-out infinite;
+        }
+
+        @keyframes breathePulse {
+            0%, 100% {
+                transform: scale(1);
+                opacity: 0.6;
+                box-shadow: 
+                    inset 0 0 30px rgba(255, 255, 255, 0.5),
+                    0 10px 40px rgba(212, 197, 226, 0.3);
+            }
+            50% {
+                transform: scale(1.15);
+                opacity: 0.9;
+                box-shadow: 
+                    inset 0 0 40px rgba(255, 255, 255, 0.7),
+                    0 15px 60px rgba(184, 197, 176, 0.5),
+                    0 0 80px rgba(249, 228, 166, 0.3);
+            }
+        }
+
+        @keyframes mirrorGlow {
+            0%, 100% {
+                filter: brightness(1) drop-shadow(0 0 10px rgba(212, 197, 226, 0.5));
+            }
+            50% {
+                filter: brightness(1.3) drop-shadow(0 0 20px rgba(249, 228, 166, 0.8));
+            }
+        }
+
+        /* Sequential loading messages */
+        .loading-messages {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+            min-height: 120px;
+        }
+
+        .loading-text {
+            font-size: 1.2em;
+            color: rgba(58, 58, 58, 0.65);
+            font-style: italic;
+            opacity: 0;
+            animation: messageSequence 1.2s ease-in-out forwards;
+            text-shadow: 0 1px 3px rgba(255, 255, 255, 0.8);
+        }
+
+        .loading-text:nth-child(1) {
+            animation-delay: 0s;
+        }
+
+        .loading-text:nth-child(2) {
+            animation-delay: 2s;
+        }
+
+        .loading-text:nth-child(3) {
+            animation-delay: 4s;
+        }
+
+        @keyframes messageSequence {
+            0% {
+                opacity: 0;
+                transform: translateY(12px);
+            }
+            15%, 85% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(-12px);
+            }
+        }
+
+        .loading-sparkles {
+            margin-top: 25px;
+            font-size: 2em;
+            animation: sparkleFloat 3.5s ease-in-out infinite;
+        }
+
+        @keyframes sparkleFloat {
+            0%, 100% {
+                transform: translateY(0) scale(1) rotate(0deg);
+                opacity: 0.6;
+            }
+            50% {
+                transform: translateY(-10px) scale(1.2) rotate(180deg);
+                opacity: 1;
+            }
+        }
+
+        /* 🎨 RESULT VIEW */
+        .result-view {
+            display: none;
+            animation: resultBloom 1.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .result-view.active {
+            display: block;
+        }
+
+        @keyframes resultBloom {
+            0% {
+                opacity: 0;
+                transform: scale(0.7) translateY(50px);
+                filter: blur(15px);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+                filter: blur(0);
+            }
+        }
+
+        .section-label {
+            font-size: 0.85em;
+            text-transform: lowercase;
+            color: rgba(58, 58, 58, 0.45);
+            margin-bottom: 16px;
+            font-family: 'Karla', sans-serif;
+            font-weight: 600;
+            letter-spacing: 0.8px;
+            opacity: 0;
+            animation: fadeUp 0.6s ease forwards;
+        }
+
+        .section-label:first-of-type {
+            animation-delay: 0.2s;
+        }
+
+        .user-input-box {
+            font-family: 'Georgia', serif;
+            font-size: 0.95em;
+            line-height: 1.9;
+            color: rgba(58, 58, 58, 0.7);
+            font-style: italic;
+            padding: 24px;
+            background: rgba(184, 197, 176, 0.15);
+            backdrop-filter: blur(12px);
+            border-radius: 20px;
+            border-left: 4px solid rgba(184, 197, 176, 0.6);
+            margin-bottom: 32px;
+            box-shadow: 
+                inset 0 2px 8px rgba(0, 0, 0, 0.05),
+                0 4px 12px rgba(0, 0, 0, 0.03);
+            opacity: 0;
+            animation: fadeUp 0.6s ease 0.3s forwards;
+        }
+
+        .divider {
+            border: none;
+            border-top: 1px solid rgba(255, 255, 255, 0.5);
+            margin: 32px 0;
+            box-shadow: 0 1px 0 rgba(0, 0, 0, 0.03);
+            opacity: 0;
+            animation: fadeUp 0.6s ease 0.4s forwards;
+        }
+
+        /* 💫 MORPHING GRADIENT TRANSFORMATION BOX */
+        .transformed-box {
+            font-family: 'Georgia', serif;
+            font-size: 1.25em;
+            line-height: 2;
+            color: #3A3A3A;
+            text-transform: lowercase;
+            padding: 36px;
+            background: linear-gradient(135deg, 
+                rgba(212, 197, 226, 0.3) 0%, 
+                rgba(249, 228, 166, 0.3) 25%,
+                rgba(200, 230, 249, 0.3) 50%,
+                rgba(229, 200, 249, 0.3) 75%,
+                rgba(184, 197, 176, 0.25) 100%);
+            background-size: 300% 300%;
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            font-style: italic;
+            white-space: pre-line;
+            margin-bottom: 28px;
+            box-shadow: 
+                inset 0 3px 12px rgba(255, 255, 255, 0.7),
+                inset 0 -1px 6px rgba(0, 0, 0, 0.03),
+                0 6px 24px rgba(212, 197, 226, 0.2);
+            position: relative;
+            animation: transformMorph 8s ease-in-out infinite, fadeUp 0.8s ease 0.5s forwards;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            opacity: 0;
+        }
+
+        @keyframes transformMorph {
+            0%, 100% {
+                background-position: 0% 50%;
+                box-shadow: 
+                    inset 0 3px 12px rgba(255, 255, 255, 0.7),
+                    inset 0 -1px 6px rgba(0, 0, 0, 0.03),
+                    0 6px 24px rgba(212, 197, 226, 0.2);
+            }
+            33% {
+                background-position: 100% 0%;
+                box-shadow: 
+                    inset 0 3px 15px rgba(255, 255, 255, 0.8),
+                    inset 0 -1px 6px rgba(0, 0, 0, 0.03),
+                    0 10px 35px rgba(249, 228, 166, 0.3),
+                    0 0 50px rgba(249, 228, 166, 0.15);
+            }
+            66% {
+                background-position: 0% 100%;
+                box-shadow: 
+                    inset 0 3px 15px rgba(255, 255, 255, 0.8),
+                    inset 0 -1px 6px rgba(0, 0, 0, 0.03),
+                    0 10px 35px rgba(184, 197, 176, 0.3),
+                    0 0 50px rgba(200, 230, 249, 0.15);
+            }
+        }
+
+        .signature {
+            font-size: 0.7em;
+            color: rgba(58, 58, 58, 0.4);
+            font-style: italic;
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.4);
+            box-shadow: 0 -1px 0 rgba(0, 0, 0, 0.03);
+            opacity: 0;
+            animation: fadeUp 0.6s ease 0.6s forwards;
+        }
+
+        .ai-disclaimer {
+            font-size: 0.75em;
+            color: rgba(58, 58, 58, 0.45);
+            font-style: italic;
+            text-align: center;
+            margin-top: 20px;
+            line-height: 1.7;
+            padding: 0 12px;
+            opacity: 0;
+            animation: fadeUp 0.6s ease 0.7s forwards;
+        }
+
+        /* 🎯 ACTION BUTTONS */
+        .action-buttons {
+            margin-top: 32px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .action-btn {
+            padding: 20px 24px;
+            background: rgba(255, 255, 255, 0.55);
+            backdrop-filter: blur(18px);
+            border: 1px solid rgba(255, 255, 255, 0.7);
+            border-radius: 22px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            text-align: left;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            -webkit-appearance: none;
+            box-shadow: 
+                0 5px 15px rgba(0, 0, 0, 0.06),
+                inset 0 1px 0 rgba(255, 255, 255, 0.9);
+            opacity: 0;
+            animation: bounceIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+
+        .action-btn:nth-child(1) {
+            animation-delay: 0.8s;
+        }
+
+        .action-btn:nth-child(2) {
+            animation-delay: 0.9s;
+        }
+
+        @keyframes bounceIn {
+            0% {
+                opacity: 0;
+                transform: scale(0.8) translateY(20px);
+            }
+            60% {
+                transform: scale(1.05) translateY(-5px);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        .action-btn:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 
+                0 8px 25px rgba(0, 0, 0, 0.1),
+                inset 0 1px 0 rgba(255, 255, 255, 1);
+            background: rgba(255, 255, 255, 0.7);
+        }
+
+        .action-btn:active {
+            transform: scale(0.98) translateY(0);
+            background: linear-gradient(135deg, 
+                rgba(212, 197, 226, 0.3), 
+                rgba(249, 228, 166, 0.3));
+            border-color: rgba(184, 197, 176, 0.7);
+        }
+
+        .action-icon {
+            font-size: 1.5em;
+            flex-shrink: 0;
+        }
+
+        .action-content {
+            flex: 1;
+        }
+
+        .action-title {
+            font-weight: 600;
+            font-size: 1em;
+            margin-bottom: 5px;
+            text-transform: lowercase;
+            color: #3A3A3A;
+        }
+
+        .action-desc {
+            font-size: 0.85em;
+            color: rgba(58, 58, 58, 0.55);
+            font-style: italic;
+        }
+
+        /* 🔄 TRY AGAIN BUTTON */
+        .try-again-btn {
+            margin-top: 28px;
+            padding: 18px 45px;
+            background: transparent;
+            color: rgba(58, 58, 58, 0.65);
+            border: 2px solid rgba(212, 197, 226, 0.45);
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            text-transform: lowercase;
+            width: 100%;
+            -webkit-appearance: none;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.03);
+            font-size: 1em;
+            font-weight: 500;
+            opacity: 0;
+            animation: fadeUp 0.6s ease 1s forwards;
+        }
+
+        .try-again-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .try-again-btn:active {
+            transform: scale(0.98);
+            background: linear-gradient(135deg, 
+                rgba(212, 197, 226, 0.2), 
+                rgba(249, 228, 166, 0.2));
+            color: #3A3A3A;
+            border-color: rgba(184, 197, 176, 0.6);
+        }
+
+        /* 🔗 FOOTER LINKS */
+        .footer-links {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            align-items: flex-end;
+            z-index: 100;
+        }
+
+        .footer-link {
+            font-size: 0.75em;
+            color: rgba(58, 58, 58, 0.35);
+            text-decoration: none;
+            font-style: italic;
+            background: rgba(255, 255, 255, 0.35);
+            backdrop-filter: blur(12px);
+            padding: 8px 16px;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+        }
+
+        .footer-link:hover {
+            color: rgba(58, 58, 58, 0.6);
+            background: rgba(255, 255, 255, 0.55);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        /* 📱 RESPONSIVE DESIGN */
+        @media (max-width: 480px) {
+            .container {
+                padding: 15px;
+            }
+            
+            .logo {
+                font-size: 2.3em;
+            }
+            
+            .glass-card {
+                padding: 30px 24px;
+                border-radius: 26px;
+            }
+            
+            textarea {
+                min-height: 160px;
+                font-size: 1em;
+                padding: 20px;
+            }
+            
+            .transformed-box {
+                font-size: 1.1em;
+                padding: 28px;
+            }
+
+            .breathing-circle {
+                width: 120px;
+                height: 120px;
+            }
+
+            .breathing-circle::before {
+                font-size: 3em;
+            }
+
+            .footer-links {
+                bottom: 15px;
+                right: 15px;
+            }
+
+            .parallax-cloud,
+            .quote-cloud {
+                font-size: 0.65em;
+                max-width: 160px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- ✨ CUSTOM CURSOR -->
+    <div class="custom-cursor"></div>
+    <div class="cursor-follower"></div>
+
+    <!-- 🌊 LIQUID GRADIENT BACKGROUND -->
+    <div class="gradient-bg"></div>
+
+    <!-- 💫 AURORA LIGHT BEAMS -->
+    <div class="aurora" id="auroraContainer"></div>
+
+    <!-- 🌀 RIPPLE EFFECT CANVAS -->
+    <canvas id="rippleCanvas"></canvas>
+
+    <!-- ☁️ 3-LAYER PARALLAX CLOUDS (Back Layer) -->
+    <div class="cloud-layer back" id="cloudLayerBack"></div>
+
+    <!-- ☁️ 3-LAYER PARALLAX CLOUDS (Mid Layer) -->
+    <div class="cloud-layer mid" id="cloudLayerMid"></div>
+
+    <!-- ☁️ 3-LAYER PARALLAX CLOUDS (Front Layer - includes quote clouds) -->
+    <div class="cloud-layer front" id="cloudLayerFront"></div>
+
+    <!-- 🌟 PARTICLE SYSTEM -->
+    <div class="particle-system" id="particleSystem"></div>
+
+    <!-- 📱 MAIN CONTAINER -->
+    <div class="container" id="mainContainer">
+        
+        <!-- 🏠 SUBMISSION VIEW -->
+        <div id="submissionView" class="view">
+            <div class="logo">
+                magicmirror<span class="emoji">🪞✨</span>
+            </div>
+            <p class="tagline">
+                your truth, transformed withouttoomuchthought.
+            </p>
+
+            <div class="glass-card">
+                <textarea 
+                    id="userInput" 
+                    placeholder="what's on your heart?" 
+                    maxlength="500"
+                    autocomplete="off"
+                    autocorrect="off"
+                    autocapitalize="off"
+                    spellcheck="false"
+                ></textarea>
+                <button class="submit-btn" onclick="submitThought()">
+                    transform 🪞✨
+                </button>
+            </div>
+
+            <p class="footer-note">
+                write whatever you're feeling.<br>
+                no filter. no perfection.<br>
+                this is a safe space to be honest.<br><br>
+                anonymous. safe. free. 💛
+            </p>
+        </div>
+
+        <!-- 🌀 LOADING VIEW -->
+        <div id="loadingView" class="loading-view">
+            <div class="breathing-circle"></div>
+            
+            <div class="loading-messages">
+                <p class="loading-text">holding your words gently...</p>
+                <p class="loading-text">seeing what you really mean...</p>
+                <p class="loading-text">finding the truth underneath...</p>
+            </div>
+            
+            <div class="loading-sparkles">✨💫🪞</div>
+        </div>
+
+        <!-- 🎨 RESULT VIEW -->
+        <div id="resultView" class="result-view">
+            <div class="glass-card">
+                <div class="section-label">you wrote:</div>
+                <div class="user-input-box" id="userInputDisplay"></div>
+                
+                <div class="divider"></div>
+                
+                <div class="section-label">here's what we hear you saying 🪞✨</div>
+                <div class="transformed-box" id="transformedText"></div>
+                
+                <div class="signature">
+                    transformed with love by magicmirror | a @withouttoomuchthought and claude creation 🪞✨
+                </div>
+                
+                <p class="ai-disclaimer">
+                    these reflections come from ai. take what resonates, leave what doesn't.<br>
+                    trust your own truth first 💛
+                </p>
+
+                <div class="action-buttons">
+                    <button class="action-btn" onclick="shareToSocial()">
+                        <div class="action-icon">🌸</div>
+                        <div class="action-content">
+                            <div class="action-title">share your truth</div>
+                            <div class="action-desc">tiktok story, instagram, anywhere you want</div>
+                        </div>
+                    </button>
+
+                    <button class="action-btn" onclick="downloadArt()">
+                        <div class="action-icon">🎨</div>
+                        <div class="action-content">
+                            <div class="action-title">download as art</div>
+                            <div class="action-desc">save this as a beautiful reminder</div>
+                        </div>
+                    </button>
+                </div>
+
+                <button class="try-again-btn" onclick="tryAgain()">
+                    share another truth 🪞
+                </button>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- 🔗 FOOTER LINKS -->
+    <div class="footer-links">
+        <a href="https://www.tiktok.com/@withouttoomuchthought" class="footer-link" target="_blank" rel="noopener noreferrer">@withouttoomuchthought</a>
+        <a href="https://www.withouttoomuchthought.com" class="footer-link" target="_blank" rel="noopener noreferrer">withouttoomuchthought.com</a>
+    </div>
+
+    <script>
+        // 🌟 HEALING QUOTES FOR FLOATING CLOUDS
+        const healingQuotes = [
+            "real love doesn't\nkeep score...",
+            "you don't have to be strong\nto be worthy...",
+            "maybe it's time\nto be soft...",
+            "strength became your default\nbecause weakness wasn't safe...",
+            "you're not failing —\nyou're protecting...",
+            "this isn't weakness —\nthis is grief...",
+            "you don't owe anyone anything\nfor being chosen...",
+            "you're allowed to be\nuncertain...",
+            "what if this is exactly\nwhere you need to be?",
+            "your truth matters,\neven when it's quiet...",
+            "healing isn't linear,\nand that's okay...",
+            "you're doing better\nthan you think...",
+            "being seen\ndoesn't require being perfect...",
+            "your feelings\nare valid...",
+            "it's okay to not be okay\nright now...",
+            "being soft\nis not the same\nas being weak...",
+            "you are allowed\nto take up space...",
+            "your journey\nis uniquely yours..."
+        ];
+
+        // ✨ CUSTOM CURSOR SYSTEM
+        const cursor = document.querySelector('.custom-cursor');
+        const cursorFollower = document.querySelector('.cursor-follower');
+        
+        let mouseX = 0, mouseY = 0;
+        let cursorX = 0, cursorY = 0;
+        let followerX = 0, followerY = 0;
+
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+        });
+
+        function animateCursor() {
+            // Smooth cursor follow
+            cursorX += (mouseX - cursorX) * 0.2;
+            cursorY += (mouseY - cursorY) * 0.2;
+            cursor.style.left = cursorX + 'px';
+            cursor.style.top = cursorY + 'px';
+
+            // Delayed follower
+            followerX += (mouseX - followerX) * 0.1;
+            followerY += (mouseY - followerY) * 0.1;
+            cursorFollower.style.left = followerX + 'px';
+            cursorFollower.style.top = followerY + 'px';
+
+            requestAnimationFrame(animateCursor);
+        }
+        animateCursor();
+
+        // 💫 AURORA LIGHT BEAMS
+        function createAuroraBeams() {
+            const auroraContainer = document.getElementById('auroraContainer');
+            const beamCount = 5;
+            
+            for (let i = 0; i < beamCount; i++) {
+                const beam = document.createElement('div');
+                beam.className = 'aurora-beam';
+                
+                const topPos = Math.random() * 100;
+                const duration = 15 + Math.random() * 10;
+                const delay = Math.random() * 15;
+                
+                beam.style.top = topPos + '%';
+                beam.style.animationDuration = duration + 's';
+                beam.style.animationDelay = delay + 's';
+                
+                auroraContainer.appendChild(beam);
+            }
+        }
+        createAuroraBeams();
+
+        // 🌀 RIPPLE EFFECT SYSTEM
+        const rippleCanvas = document.getElementById('rippleCanvas');
+        const rippleCtx = rippleCanvas.getContext('2d');
+        let ripples = [];
+
+        function resizeRippleCanvas() {
+            rippleCanvas.width = window.innerWidth;
+            rippleCanvas.height = window.innerHeight;
+        }
+        resizeRippleCanvas();
+        window.addEventListener('resize', resizeRippleCanvas);
+
+        document.addEventListener('click', (e) => {
+            ripples.push({
+                x: e.clientX,
+                y: e.clientY,
+                radius: 0,
+                maxRadius: 150,
+                alpha: 1
+            });
+        });
+
+        function animateRipples() {
+            rippleCtx.clearRect(0, 0, rippleCanvas.width, rippleCanvas.height);
+            
+            ripples = ripples.filter(ripple => {
+                ripple.radius += 3;
+                ripple.alpha -= 0.015;
+                
+                if (ripple.alpha <= 0) return false;
+                
+                rippleCtx.beginPath();
+                rippleCtx.arc(ripple.x, ripple.y, ripple.radius, 0, Math.PI * 2);
+                rippleCtx.strokeStyle = `rgba(212, 197, 226, ${ripple.alpha * 0.5})`;
+                rippleCtx.lineWidth = 2;
+                rippleCtx.stroke();
+                
+                return true;
+            });
+            
+            requestAnimationFrame(animateRipples);
+        }
+        animateRipples();
+
+        // ☁️ 3-LAYER PARALLAX CLOUD SYSTEM
+        function createParallaxClouds() {
+            const layers = [
+                { container: document.getElementById('cloudLayerBack'), count: 8, speedRange: [35, 45], sizeRange: [80, 120], opacity: 0.3 },
+                { container: document.getElementById('cloudLayerMid'), count: 6, speedRange: [25, 35], sizeRange: [100, 150], opacity: 0.5 },
+                { container: document.getElementById('cloudLayerFront'), count: 5, speedRange: [15, 25], sizeRange: [120, 180], opacity: 0.7 }
+            ];
+            
+            layers.forEach(layer => {
+                for (let i = 0; i < layer.count; i++) {
+                    const cloud = document.createElement('div');
+                    cloud.className = 'parallax-cloud';
+                    
+                    const size = layer.sizeRange[0] + Math.random() * (layer.sizeRange[1] - layer.sizeRange[0]);
+                    const leftPos = Math.random() * 100;
+                    const duration = layer.speedRange[0] + Math.random() * (layer.speedRange[1] - layer.speedRange[0]);
+                    const delay = Math.random() * 30;
+                    const drift = (Math.random() - 0.3) * 120;
+                    const rotate = (Math.random() - 0.5) * 25;
+                    
+                    cloud.style.width = size + 'px';
+                    cloud.style.height = size * 0.6 + 'px';
+                    cloud.style.left = leftPos + '%';
+                    cloud.style.animationDuration = duration + 's';
+                    cloud.style.animationDelay = delay + 's';
+                    cloud.style.setProperty('--cloud-drift', drift + '%');
+                    cloud.style.setProperty('--cloud-rotate', rotate + 'deg');
+                    cloud.style.setProperty('--cloud-opacity', layer.opacity);
+                    
+                    layer.container.appendChild(cloud);
+                }
+            });
+        }
+        createParallaxClouds();
+
+        // 💭 HEALING QUOTE CLOUDS (Front layer only)
+        function createQuoteClouds() {
+            const frontLayer = document.getElementById('cloudLayerFront');
+            const quoteCount = 8;
+            
+            for (let i = 0; i < quoteCount; i++) {
+                const cloud = document.createElement('div');
+                cloud.className = 'quote-cloud';
+                cloud.textContent = healingQuotes[Math.floor(Math.random() * healingQuotes.length)];
+                
+                const leftPos = Math.random() * 95;
+                const duration = 20 + Math.random() * 15;
+                const delay = Math.random() * 25;
+                const drift = (Math.random() - 0.4) * 130;
+                const rotate = (Math.random() - 0.5) * 18;
+                
+                cloud.style.left = leftPos + '%';
+                cloud.style.animationDuration = duration + 's';
+                cloud.style.animationDelay = delay + 's';
+                cloud.style.setProperty('--quote-drift', drift + '%');
+                cloud.style.setProperty('--quote-rotate', rotate + 'deg');
+                
+                frontLayer.appendChild(cloud);
+            }
+        }
+        createQuoteClouds();
+
+        // 🌟 3-TIER PARTICLE SYSTEM
+        function createParticles() {
+            const particleSystem = document.getElementById('particleSystem');
+            
+            // Slow particles
+            for (let i = 0; i < 15; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle slow';
+                
+                const leftPos = Math.random() * 100;
+                const duration = 12 + Math.random() * 10;
+                const delay = Math.random() * 15;
+                const drift = (Math.random() - 0.5) * 80;
+                
+                particle.style.left = leftPos + '%';
+                particle.style.animationDuration = duration + 's';
+                particle.style.animationDelay = delay + 's';
+                particle.style.setProperty('--particle-drift', drift + 'px');
+                
+                particleSystem.appendChild(particle);
+            }
+            
+            // Fast particles
+            for (let i = 0; i < 12; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle fast';
+                
+                const leftPos = Math.random() * 100;
+                const duration = 8 + Math.random() * 6;
+                const delay = Math.random() * 10;
+                const drift = (Math.random() - 0.5) * 100;
+                
+                particle.style.left = leftPos + '%';
+                particle.style.animationDuration = duration + 's';
+                particle.style.animationDelay = delay + 's';
+                particle.style.setProperty('--particle-drift', drift + 'px');
+                
+                particleSystem.appendChild(particle);
+            }
+            
+            // Glow particles (fewer, special)
+            for (let i = 0; i < 8; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle glow';
+                
+                const leftPos = Math.random() * 100;
+                const duration = 10 + Math.random() * 8;
+                const delay = Math.random() * 12;
+                const drift = (Math.random() - 0.5) * 120;
+                
+                particle.style.left = leftPos + '%';
+                particle.style.animationDuration = duration + 's';
+                particle.style.animationDelay = delay + 's';
+                particle.style.setProperty('--particle-drift', drift + 'px');
+                
+                particleSystem.appendChild(particle);
+            }
+        }
+        createParticles();
+
+        // 🪞 3D CARD TILT (Mouse on desktop, Gyroscope on mobile)
+        const mainContainer = document.getElementById('mainContainer');
+        const glassCards = document.querySelectorAll('.glass-card');
+
+        // Desktop: Mouse-based tilt
+        mainContainer.addEventListener('mousemove', (e) => {
+            if (window.innerWidth > 768) {
+                const rect = mainContainer.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+                
+                const rotateX = (y - centerY) / 30;
+                const rotateY = (centerX - x) / 30;
+                
+                mainContainer.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+            }
+        });
+
+        mainContainer.addEventListener('mouseleave', () => {
+            mainContainer.style.transform = 'perspective(1000px) rotateX(0) rotateY(0)';
+        });
+
+        // Mobile: Gyroscope-based tilt
+        if (window.DeviceOrientationEvent && /Mobile|Android|iPhone|iPad/i.test(navigator.userAgent)) {
+            window.addEventListener('deviceorientation', (e) => {
+                const gamma = e.gamma || 0; // left-right tilt (-90 to 90)
+                const beta = e.beta || 0;   // front-back tilt (-180 to 180)
+                
+                const rotateX = beta / 15;
+                const rotateY = gamma / 15;
+                
+                mainContainer.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+            });
+        }
+
+        // 📝 MAIN SUBMISSION LOGIC
+        let currentUserInput = '';
+
+        async function submitThought() {
+            const input = document.getElementById('userInput').value.trim();
+            
+            if (!input) {
+                alert('share something first, love 💛');
+                return;
+            }
+
+            currentUserInput = input;
+            
+            // Switch views
+            document.getElementById('submissionView').classList.add('hidden');
+            document.getElementById('loadingView').classList.add('active');
+            
+            // TODO: Replace with your actual webhook URL
+            const WEBHOOK_URL = 'https://hook.us2.make.com/ds2oyv9bi33hoq4rcgobqht654qmh5kb';
+            
+            try {
+                const response = await fetch(WEBHOOK_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        original_text: input,
+                        user_ip: 'browser'
+                    })
+                });
+
+                const data = await response.json();
+                
+                // Hide loading
+                setTimeout(() => {
+                    document.getElementById('loadingView').classList.remove('active');
+
+                    if (data.error) {
+                        // Show limit message
+                        alert(data.message);
+                        document.getElementById('submissionView').classList.remove('hidden');
+                        return;
+                    }
+                    
+                    // Show results
+                    document.getElementById('userInputDisplay').innerText = `"${currentUserInput}"`;
+                    document.getElementById('transformedText').innerText = data.transformed;
+                    document.getElementById('resultView').classList.add('active');
+                    
+                    // Celebration particle burst!
+                    createCelebrationBurst();
+                    
+                    // Scroll to top smoothly
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                }, 6000); // Wait for all 3 loading messages
+
+            } catch (error) {
+                console.error('Error:', error);
+                document.getElementById('loadingView').classList.remove('active');
+                alert('something went wrong. please try again 💛');
+                document.getElementById('submissionView').classList.remove('hidden');
+            }
+        }
+
+        // 🎉 CELEBRATION PARTICLE BURST
+        function createCelebrationBurst() {
+            const particleSystem = document.getElementById('particleSystem');
+            
+            for (let i = 0; i < 30; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle glow';
+                
+                const centerX = 50;
+                const angle = (360 / 30) * i;
+                const distance = 5 + Math.random() * 15;
+                
+                const leftPos = centerX + Math.cos(angle * Math.PI / 180) * distance;
+                const duration = 2 + Math.random() * 2;
+                const drift = (Math.random() - 0.5) * 200;
+                
+                particle.style.left = leftPos + '%';
+                particle.style.bottom = '50%';
+                particle.style.animationDuration = duration + 's';
+                particle.style.animationDelay = '0s';
+                particle.style.setProperty('--particle-drift', drift + 'px');
+                
+                particleSystem.appendChild(particle);
+                
+                // Remove after animation
+                setTimeout(() => {
+                    particle.remove();
+                }, duration * 1000);
+            }
+        }
+
+        // 🎨 SHARE TO SOCIAL
+        async function shareToSocial() {
+            const canvas = createStoryCanvas();
+            
+            canvas.toBlob(async (blob) => {
+                if (navigator.share && navigator.canShare) {
+                    try {
+                        const file = new File([blob], 'magicmirror-truth.png', { type: 'image/png' });
+                        
+                        if (navigator.canShare({ files: [file] })) {
+                            await navigator.share({
+                                files: [file],
+                                title: 'my truth, transformed',
+                                text: 'shared from magicmirror 🪞✨'
+                            });
+                            
+                            setTimeout(() => {
+                                alert('🌸 sharing complete!\n\nif you chose tiktok, tap "story" to share 💛');
+                            }, 300);
+                            return;
+                        }
+                    } catch (error) {
+                        console.log('Share cancelled:', error);
+                    }
+                }
+                
+                downloadBlob(blob, 'magicmirror-truth.png');
+                
+                setTimeout(() => {
+                    alert('💛 image saved!\n\nopen tiktok → tap + → upload → select image → story\n\nshare your truth 🪞✨');
+                }, 100);
+            }, 'image/png', 0.95);
+        }
+
+        // 🎨 DOWNLOAD AS ART
+        function downloadArt() {
+            const canvas = createStoryCanvas();
+            
+            canvas.toBlob((blob) => {
+                downloadBlob(blob, `magicmirror-${Date.now()}.png`);
+                
+                setTimeout(() => {
+                    alert('🎨 your reflection has been saved!\n\nshare it if it speaks to you 💛');
+                }, 100);
+            }, 'image/png', 0.95);
+        }
+
+        // 🖼️ CREATE STORY CANVAS
+        function createStoryCanvas() {
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            
+            canvas.width = 1080;
+            canvas.height = 1920;
+            
+            // Dreamy gradient background
+            const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+            gradient.addColorStop(0, '#FFE5F1');
+            gradient.addColorStop(0.25, '#E5D9F2');
+            gradient.addColorStop(0.5, '#D5F0F8');
+            gradient.addColorStop(0.75, '#E5D9F2');
+            gradient.addColorStop(1, '#F9E4C8');
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            // Subtle texture
+            ctx.globalAlpha = 0.03;
+            for (let i = 0; i < canvas.width; i += 3) {
+                ctx.strokeStyle = '#fff';
+                ctx.lineWidth = 1;
+                ctx.beginPath();
+                ctx.moveTo(i, 0);
+                ctx.lineTo(i, canvas.height);
+                ctx.stroke();
+            }
+            ctx.globalAlpha = 1;
+            
+            // Card
+            const margin = 100;
+            const cardPadding = 70;
+            const cardX = margin;
+            const cardY = margin + 100;
+            const cardWidth = canvas.width - (margin * 2);
+            const cardHeight = canvas.height - (margin * 2) - 200;
+            
+            // Glass card
+            ctx.shadowColor = 'rgba(0, 0, 0, 0.15)';
+            ctx.shadowBlur = 50;
+            ctx.shadowOffsetY = 25;
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.45)';
+            ctx.beginPath();
+            ctx.roundRect(cardX, cardY, cardWidth, cardHeight, 40);
+            ctx.fill();
+            ctx.shadowColor = 'transparent';
+            
+            // Border
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.7)';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.roundRect(cardX + 1, cardY + 1, cardWidth - 2, cardHeight - 2, 40);
+            ctx.stroke();
+            
+            // Text
+            const transformedText = document.getElementById('transformedText').innerText;
+            const lines = transformedText.split('\n').filter(line => line.trim());
+            
+            ctx.fillStyle = '#3A3A3A';
+            ctx.font = 'italic 44px Georgia, serif';
+            ctx.textAlign = 'left';
+            ctx.textBaseline = 'top';
+            
+            // Wrap text
+            function wrapText(lines, x, y, maxWidth, lineHeight) {
+                let currentY = y;
+                
+                lines.forEach((line) => {
+                    if (!line.trim()) {
+                        currentY += lineHeight * 0.6;
+                        return;
+                    }
+                    
+                    const words = line.split(' ');
+                    let currentLine = '';
+                    
+                    words.forEach((word) => {
+                        const testLine = currentLine + word + ' ';
+                        const metrics = ctx.measureText(testLine);
+                        
+                        if (metrics.width > maxWidth && currentLine !== '') {
+                            ctx.fillText(currentLine.trim(), x, currentY);
+                            currentLine = word + ' ';
+                            currentY += lineHeight;
+                        } else {
+                            currentLine = testLine;
+                        }
+                    });
+                    
+                    if (currentLine.trim()) {
+                        ctx.fillText(currentLine.trim(), x, currentY);
+                        currentY += lineHeight;
+                    }
+                });
+            }
+            
+            const textX = cardX + cardPadding;
+            const textY = cardY + cardPadding;
+            const textMaxWidth = cardWidth - (cardPadding * 2);
+            const lineHeight = 62;
+            
+            wrapText(lines, textX, textY, textMaxWidth, lineHeight);
+            
+            // Divider
+            ctx.strokeStyle = 'rgba(0, 0, 0, 0.1)';
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(cardX + 100, cardY + cardHeight - 150);
+            ctx.lineTo(cardX + cardWidth - 100, cardY + cardHeight - 150);
+            ctx.stroke();
+            
+            // Signature
+            ctx.textAlign = 'center';
+            ctx.font = '26px Georgia, serif';
+            ctx.fillStyle = 'rgba(58, 58, 58, 0.55)';
+            ctx.fillText('transformed with love by magicmirror', 
+                canvas.width / 2, cardY + cardHeight - 105);
+            
+            ctx.font = '24px sans-serif';
+            ctx.fillStyle = 'rgba(58, 58, 58, 0.5)';
+            ctx.fillText('a @withouttoomuchthought and claude creation 🪞✨', 
+                canvas.width / 2, cardY + cardHeight - 65);
+            
+            return canvas;
+        }
+
+        // Helper
+        function downloadBlob(blob, filename) {
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        // 🔄 TRY AGAIN
+        function tryAgain() {
+            document.getElementById('resultView').classList.remove('active');
+            document.getElementById('submissionView').classList.remove('hidden');
+            document.getElementById('userInput').value = '';
+            currentUserInput = '';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // ⌨️ ENTER KEY
+        document.getElementById('userInput').addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                submitThought();
+            }
+        });
+    </script>
+</body>
+</html>
