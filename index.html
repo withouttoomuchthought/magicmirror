@@ -1,0 +1,1267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>magicmirror 🪞✨</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        @import url('https://fonts.googleapis.com/css2?family=Karla:wght@300;400;600&display=swap');
+
+        body {
+            font-family: 'Karla', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #E8D5F2 0%, #F9E4C8 25%, #C8E6F9 50%, #E5C8F9 75%, #F9D5E8 100%);
+            background-size: 400% 400%;
+            min-height: 100vh;
+            padding: 20px;
+            color: #3A3A3A;
+            animation: dreamGradient 20s ease infinite;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        @keyframes dreamGradient {
+            0%, 100% {
+                background-position: 0% 50%;
+            }
+            25% {
+                background-position: 50% 100%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            75% {
+                background-position: 50% 0%;
+            }
+        }
+
+        /* ✨ FLOATING ORB SYSTEM - Creates depth and magic */
+        .orb-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+            overflow: hidden;
+        }
+
+        .floating-orb {
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.3), rgba(212, 197, 226, 0.15));
+            backdrop-filter: blur(20px);
+            box-shadow: 
+                inset 0 0 20px rgba(255, 255, 255, 0.3),
+                0 8px 32px rgba(184, 197, 176, 0.2);
+            animation: floatOrb 20s ease-in-out infinite;
+        }
+
+        .orb1 {
+            width: 180px;
+            height: 180px;
+            top: 10%;
+            left: 5%;
+            animation-delay: 0s;
+            animation-duration: 25s;
+        }
+
+        .orb2 {
+            width: 120px;
+            height: 120px;
+            top: 60%;
+            right: 10%;
+            animation-delay: -5s;
+            animation-duration: 20s;
+        }
+
+        .orb3 {
+            width: 200px;
+            height: 200px;
+            bottom: 15%;
+            left: 15%;
+            animation-delay: -10s;
+            animation-duration: 30s;
+        }
+
+        .orb4 {
+            width: 90px;
+            height: 90px;
+            top: 30%;
+            right: 25%;
+            animation-delay: -15s;
+            animation-duration: 18s;
+        }
+
+        .orb5 {
+            width: 150px;
+            height: 150px;
+            top: 70%;
+            left: 40%;
+            animation-delay: -8s;
+            animation-duration: 22s;
+        }
+
+        @keyframes floatOrb {
+            0%, 100% {
+                transform: translate(0, 0) scale(1);
+                opacity: 0.4;
+            }
+            25% {
+                transform: translate(30px, -30px) scale(1.1);
+                opacity: 0.6;
+            }
+            50% {
+                transform: translate(-20px, 20px) scale(0.9);
+                opacity: 0.5;
+            }
+            75% {
+                transform: translate(40px, 10px) scale(1.05);
+                opacity: 0.7;
+            }
+        }
+
+        /* 🌙 PARTICLE SYSTEM - Gentle sparkles */
+        .particle-system {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 2;
+            overflow: hidden;
+        }
+
+        .particle {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background: rgba(255, 255, 255, 0.6);
+            border-radius: 50%;
+            animation: floatParticle linear infinite;
+            box-shadow: 0 0 4px rgba(255, 255, 255, 0.8);
+        }
+
+        @keyframes floatParticle {
+            0% {
+                transform: translateY(100vh) translateX(0) scale(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100px) translateX(var(--drift)) scale(1);
+                opacity: 0;
+            }
+        }
+
+        /* 💭 FLOATING QUOTE CLOUDS - The healing whispers */
+        .quote-clouds {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+            overflow: hidden;
+        }
+
+        .quote-cloud {
+            position: absolute;
+            font-family: 'Georgia', serif;
+            font-style: italic;
+            font-size: 0.75em;
+            color: rgba(58, 58, 58, 0.25);
+            padding: 15px 20px;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border-radius: 50% 40% 45% 55% / 55% 45% 50% 50%;
+            box-shadow: 
+                inset 0 2px 8px rgba(255, 255, 255, 0.4),
+                0 4px 16px rgba(0, 0, 0, 0.05);
+            max-width: 200px;
+            line-height: 1.5;
+            animation: driftCloud linear infinite;
+        }
+
+        @keyframes driftCloud {
+            0% {
+                transform: translateX(-10%) translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.8;
+            }
+            90% {
+                opacity: 0.8;
+            }
+            100% {
+                transform: translateX(var(--cloud-drift)) translateY(-100px) rotate(var(--cloud-rotate));
+                opacity: 0;
+            }
+        }
+
+        /* 📱 MAIN CONTAINER */
+        .container {
+            width: 100%;
+            max-width: 520px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* 🎭 VIEW STATES */
+        .view {
+            text-align: center;
+            animation: viewFadeIn 1s ease;
+        }
+
+        .view.hidden {
+            display: none;
+        }
+
+        @keyframes viewFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        /* 🪞 LOGO & BRANDING */
+        .logo {
+            font-family: 'Georgia', serif;
+            font-size: 2.8em;
+            font-weight: 300;
+            text-transform: lowercase;
+            margin-bottom: 12px;
+            color: #3A3A3A;
+            text-shadow: 
+                0 2px 8px rgba(255, 255, 255, 0.8),
+                0 0 30px rgba(212, 197, 226, 0.3);
+            letter-spacing: -0.5px;
+        }
+
+        .emoji {
+            font-size: 1.1em;
+            margin-left: 8px;
+            display: inline-block;
+            animation: shimmer 3s ease-in-out infinite;
+        }
+
+        @keyframes shimmer {
+            0%, 100% {
+                transform: scale(1) rotate(0deg);
+                filter: brightness(1);
+            }
+            50% {
+                transform: scale(1.1) rotate(5deg);
+                filter: brightness(1.2);
+            }
+        }
+
+        .tagline {
+            font-size: 1em;
+            line-height: 1.6;
+            margin-bottom: 40px;
+            opacity: 0.8;
+            color: #4A4A4A;
+        }
+
+        /* 💎 GLASSMORPHIC CARDS */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.35);
+            backdrop-filter: blur(20px) saturate(180%);
+            border-radius: 28px;
+            padding: 35px 30px;
+            box-shadow: 
+                0 8px 32px rgba(0, 0, 0, 0.08),
+                0 2px 8px rgba(0, 0, 0, 0.04),
+                inset 0 1px 0 rgba(255, 255, 255, 0.6),
+                inset 0 -1px 0 rgba(0, 0, 0, 0.05);
+            position: relative;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+        }
+
+        .glass-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0) 50%);
+            border-radius: 28px;
+            pointer-events: none;
+        }
+
+        /* 📝 TEXTAREA - Soft & Inviting */
+        textarea {
+            width: 100%;
+            min-height: 180px;
+            padding: 22px;
+            border: none;
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(10px);
+            font-family: 'Georgia', serif;
+            font-size: 1.05em;
+            line-height: 1.8;
+            resize: none;
+            color: #3A3A3A;
+            box-shadow: 
+                inset 0 2px 12px rgba(0, 0, 0, 0.06),
+                inset 0 1px 0 rgba(255, 255, 255, 0.8);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            -webkit-appearance: none;
+        }
+
+        textarea:focus {
+            outline: none;
+            background: rgba(255, 255, 255, 0.75);
+            box-shadow: 
+                inset 0 2px 16px rgba(184, 197, 176, 0.15),
+                inset 0 1px 0 rgba(255, 255, 255, 0.9),
+                0 0 0 3px rgba(212, 197, 226, 0.2);
+            transform: scale(1.01);
+        }
+
+        textarea::placeholder {
+            color: rgba(58, 58, 58, 0.4);
+            font-style: italic;
+        }
+
+        /* ✨ SUBMIT BUTTON - Soft Neumorphic Magic */
+        .submit-btn {
+            margin-top: 24px;
+            padding: 18px 50px;
+            background: linear-gradient(135deg, #D4C5E2 0%, #B8C5B0 100%);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1em;
+            font-weight: 500;
+            cursor: pointer;
+            text-transform: lowercase;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 
+                0 8px 24px rgba(184, 197, 176, 0.35),
+                0 2px 8px rgba(0, 0, 0, 0.08),
+                inset 0 1px 0 rgba(255, 255, 255, 0.3);
+            width: 100%;
+            -webkit-appearance: none;
+            position: relative;
+            overflow: hidden;
+            letter-spacing: 0.3px;
+        }
+
+        .submit-btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.4);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 
+                0 12px 32px rgba(184, 197, 176, 0.4),
+                0 4px 12px rgba(0, 0, 0, 0.1),
+                inset 0 1px 0 rgba(255, 255, 255, 0.4);
+        }
+
+        .submit-btn:active::before {
+            width: 400px;
+            height: 400px;
+        }
+
+        .submit-btn:active {
+            transform: scale(0.98) translateY(0);
+        }
+
+        /* 💛 FOOTER NOTE */
+        .footer-note {
+            margin-top: 35px;
+            font-size: 0.9em;
+            color: rgba(58, 58, 58, 0.6);
+            font-style: italic;
+            line-height: 1.8;
+            text-shadow: 0 1px 3px rgba(255, 255, 255, 0.8);
+        }
+
+        /* 🌀 LOADING VIEW - Rotating Mirror Magic */
+        .loading-view {
+            display: none;
+            text-align: center;
+            animation: viewFadeIn 0.6s ease;
+        }
+
+        .loading-view.active {
+            display: block;
+        }
+
+        .mirror-container {
+            width: 140px;
+            height: 140px;
+            margin: 0 auto 30px;
+            position: relative;
+            perspective: 1000px;
+        }
+
+        .rotating-mirror {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            animation: rotateMirror 4s linear infinite;
+            transform-style: preserve-3d;
+        }
+
+        .mirror-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.4) 0%, rgba(212, 197, 226, 0.3) 100%);
+            backdrop-filter: blur(15px);
+            box-shadow: 
+                inset 0 2px 20px rgba(255, 255, 255, 0.6),
+                inset 0 -2px 20px rgba(184, 197, 176, 0.2),
+                0 8px 32px rgba(0, 0, 0, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.5);
+        }
+
+        .mirror-face::before {
+            content: '🪞';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 3em;
+            animation: mirrorPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes rotateMirror {
+            0% {
+                transform: rotateY(0deg) rotateX(0deg);
+            }
+            50% {
+                transform: rotateY(180deg) rotateX(10deg);
+            }
+            100% {
+                transform: rotateY(360deg) rotateX(0deg);
+            }
+        }
+
+        @keyframes mirrorPulse {
+            0%, 100% {
+                transform: translate(-50%, -50%) scale(1);
+                opacity: 0.8;
+            }
+            50% {
+                transform: translate(-50%, -50%) scale(1.1);
+                opacity: 1;
+            }
+        }
+
+        .loading-messages {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .loading-text {
+            font-size: 1.15em;
+            color: rgba(58, 58, 58, 0.7);
+            font-style: italic;
+            opacity: 0;
+            animation: messageAppear 1s ease-in-out forwards;
+        }
+
+        .loading-text:nth-child(1) {
+            animation-delay: 0s;
+        }
+
+        .loading-text:nth-child(2) {
+            animation-delay: 1.5s;
+        }
+
+        .loading-text:nth-child(3) {
+            animation-delay: 3s;
+        }
+
+        @keyframes messageAppear {
+            0% {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            20%, 80% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+        }
+
+        .loading-sparkles {
+            margin-top: 20px;
+            font-size: 1.8em;
+            animation: sparkleFloat 3s ease-in-out infinite;
+        }
+
+        @keyframes sparkleFloat {
+            0%, 100% {
+                transform: translateY(0) scale(1);
+                opacity: 0.5;
+            }
+            50% {
+                transform: translateY(-8px) scale(1.2);
+                opacity: 1;
+            }
+        }
+
+        /* 🎨 RESULT VIEW */
+        .result-view {
+            display: none;
+            animation: viewFadeIn 1s ease;
+        }
+
+        .result-view.active {
+            display: block;
+        }
+
+        .section-label {
+            font-size: 0.85em;
+            text-transform: lowercase;
+            color: rgba(58, 58, 58, 0.5);
+            margin-bottom: 14px;
+            font-family: 'Karla', sans-serif;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        .user-input-box {
+            font-family: 'Georgia', serif;
+            font-size: 0.95em;
+            line-height: 1.8;
+            color: rgba(58, 58, 58, 0.7);
+            font-style: italic;
+            padding: 22px;
+            background: rgba(184, 197, 176, 0.12);
+            backdrop-filter: blur(10px);
+            border-radius: 18px;
+            border-left: 4px solid rgba(184, 197, 176, 0.5);
+            margin-bottom: 28px;
+            box-shadow: 
+                inset 0 1px 4px rgba(0, 0, 0, 0.05),
+                0 2px 8px rgba(0, 0, 0, 0.02);
+        }
+
+        .divider {
+            border: none;
+            border-top: 1px solid rgba(255, 255, 255, 0.4);
+            margin: 28px 0;
+            box-shadow: 0 1px 0 rgba(0, 0, 0, 0.03);
+        }
+
+        .transformed-box {
+            font-family: 'Georgia', serif;
+            font-size: 1.2em;
+            line-height: 1.9;
+            color: #3A3A3A;
+            text-transform: lowercase;
+            padding: 32px;
+            background: linear-gradient(135deg, 
+                rgba(212, 197, 226, 0.25) 0%, 
+                rgba(249, 228, 166, 0.25) 30%,
+                rgba(200, 230, 249, 0.25) 60%,
+                rgba(184, 197, 176, 0.2) 100%);
+            backdrop-filter: blur(15px);
+            border-radius: 22px;
+            font-style: italic;
+            white-space: pre-line;
+            margin-bottom: 24px;
+            box-shadow: 
+                inset 0 2px 8px rgba(255, 255, 255, 0.6),
+                inset 0 -1px 4px rgba(0, 0, 0, 0.03),
+                0 4px 16px rgba(212, 197, 226, 0.15);
+            position: relative;
+            animation: transformGlow 5s ease-in-out infinite;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+        }
+
+        @keyframes transformGlow {
+            0%, 100% {
+                box-shadow: 
+                    inset 0 2px 8px rgba(255, 255, 255, 0.6),
+                    inset 0 -1px 4px rgba(0, 0, 0, 0.03),
+                    0 4px 16px rgba(212, 197, 226, 0.15);
+            }
+            50% {
+                box-shadow: 
+                    inset 0 2px 12px rgba(255, 255, 255, 0.7),
+                    inset 0 -1px 4px rgba(0, 0, 0, 0.03),
+                    0 8px 24px rgba(184, 197, 176, 0.25),
+                    0 0 40px rgba(212, 197, 226, 0.1);
+            }
+        }
+
+        .signature {
+            font-size: 0.7em;
+            color: rgba(58, 58, 58, 0.45);
+            font-style: italic;
+            text-align: center;
+            padding-top: 18px;
+            border-top: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 -1px 0 rgba(0, 0, 0, 0.03);
+        }
+
+        .ai-disclaimer {
+            font-size: 0.75em;
+            color: rgba(58, 58, 58, 0.5);
+            font-style: italic;
+            text-align: center;
+            margin-top: 18px;
+            line-height: 1.6;
+            padding: 0 10px;
+        }
+
+        /* 🎯 ACTION BUTTONS - Neumorphic Touch */
+        .action-buttons {
+            margin-top: 28px;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .action-btn {
+            padding: 18px 22px;
+            background: rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            text-align: left;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            -webkit-appearance: none;
+            box-shadow: 
+                0 4px 12px rgba(0, 0, 0, 0.05),
+                inset 0 1px 0 rgba(255, 255, 255, 0.8);
+        }
+
+        .action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 
+                0 6px 20px rgba(0, 0, 0, 0.08),
+                inset 0 1px 0 rgba(255, 255, 255, 0.9);
+        }
+
+        .action-btn:active {
+            transform: scale(0.98) translateY(0);
+            background: linear-gradient(135deg, rgba(212, 197, 226, 0.25), rgba(249, 228, 166, 0.25));
+            border-color: rgba(184, 197, 176, 0.6);
+        }
+
+        .action-icon {
+            font-size: 1.4em;
+            flex-shrink: 0;
+        }
+
+        .action-content {
+            flex: 1;
+        }
+
+        .action-title {
+            font-weight: 600;
+            font-size: 1em;
+            margin-bottom: 4px;
+            text-transform: lowercase;
+            color: #3A3A3A;
+        }
+
+        .action-desc {
+            font-size: 0.85em;
+            color: rgba(58, 58, 58, 0.6);
+            font-style: italic;
+        }
+
+        /* 🔄 TRY AGAIN BUTTON */
+        .try-again-btn {
+            margin-top: 24px;
+            padding: 16px 40px;
+            background: transparent;
+            color: rgba(58, 58, 58, 0.7);
+            border: 2px solid rgba(212, 197, 226, 0.4);
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            text-transform: lowercase;
+            width: 100%;
+            -webkit-appearance: none;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+            font-size: 1em;
+            font-weight: 500;
+        }
+
+        .try-again-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        .try-again-btn:active {
+            transform: scale(0.98);
+            background: linear-gradient(135deg, rgba(212, 197, 226, 0.15), rgba(249, 228, 166, 0.15));
+            color: #3A3A3A;
+            border-color: rgba(184, 197, 176, 0.5);
+        }
+
+        /* 🔗 FOOTER LINK */
+        .wtmt-link {
+            position: fixed;
+            bottom: 18px;
+            right: 18px;
+            font-size: 0.75em;
+            color: rgba(58, 58, 58, 0.4);
+            text-decoration: none;
+            font-style: italic;
+            background: rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(10px);
+            padding: 8px 14px;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+            z-index: 100;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .wtmt-link:hover {
+            color: rgba(58, 58, 58, 0.6);
+            background: rgba(255, 255, 255, 0.5);
+            transform: translateY(-2px);
+        }
+
+        /* 📱 RESPONSIVE DESIGN */
+        @media (max-width: 480px) {
+            body {
+                padding: 15px;
+            }
+            
+            .logo {
+                font-size: 2.2em;
+            }
+            
+            .glass-card {
+                padding: 28px 22px;
+                border-radius: 24px;
+            }
+            
+            textarea {
+                min-height: 160px;
+                font-size: 1em;
+                padding: 20px;
+            }
+            
+            .transformed-box {
+                font-size: 1.08em;
+                padding: 26px;
+            }
+
+            .mirror-container {
+                width: 120px;
+                height: 120px;
+            }
+
+            .floating-orb {
+                opacity: 0.3;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- ✨ FLOATING ORB BACKGROUND LAYER -->
+    <div class="orb-container">
+        <div class="floating-orb orb1"></div>
+        <div class="floating-orb orb2"></div>
+        <div class="floating-orb orb3"></div>
+        <div class="floating-orb orb4"></div>
+        <div class="floating-orb orb5"></div>
+    </div>
+
+    <!-- 🌙 PARTICLE SYSTEM -->
+    <div class="particle-system" id="particleSystem"></div>
+
+    <!-- 💭 FLOATING QUOTE CLOUDS -->
+    <div class="quote-clouds" id="quoteClouds"></div>
+
+    <!-- 📱 MAIN CONTAINER -->
+    <div class="container">
+        
+        <!-- 🏠 SUBMISSION VIEW -->
+        <div id="submissionView" class="view">
+            <div class="logo">
+                magicmirror<span class="emoji">🪞✨</span>
+            </div>
+            <p class="tagline">
+                your truth, transformed withouttoomuchthought.
+            </p>
+
+            <div class="glass-card">
+                <textarea 
+                    id="userInput" 
+                    placeholder="what's on your heart?" 
+                    maxlength="500"
+                    autocomplete="off"
+                    autocorrect="off"
+                    autocapitalize="off"
+                    spellcheck="false"
+                ></textarea>
+                <button class="submit-btn" onclick="submitThought()">
+                    transform 🪞✨
+                </button>
+            </div>
+
+            <p class="footer-note">
+                write whatever you're feeling.<br>
+                no filter. no perfection.<br>
+                this is a safe space to be honest.<br><br>
+                anonymous. safe. free. 💛
+            </p>
+        </div>
+
+        <!-- 🌀 LOADING VIEW -->
+        <div id="loadingView" class="loading-view">
+            <div class="mirror-container">
+                <div class="rotating-mirror">
+                    <div class="mirror-face"></div>
+                </div>
+            </div>
+            
+            <div class="loading-messages">
+                <p class="loading-text">holding your words gently...</p>
+                <p class="loading-text">seeing what you really mean...</p>
+                <p class="loading-text">finding the truth underneath...</p>
+            </div>
+            
+            <div class="loading-sparkles">✨💫🪞</div>
+        </div>
+
+        <!-- 🎨 RESULT VIEW -->
+        <div id="resultView" class="result-view">
+            <div class="glass-card">
+                <div class="section-label">you wrote:</div>
+                <div class="user-input-box" id="userInputDisplay"></div>
+                
+                <div class="divider"></div>
+                
+                <div class="section-label">here's what we hear you saying 🪞✨</div>
+                <div class="transformed-box" id="transformedText"></div>
+                
+                <div class="signature">
+                    transformed with love by magicmirror | @withouttoomuchthought 🪞✨
+                </div>
+                
+                <p class="ai-disclaimer">
+                    these reflections come from ai. take what resonates, leave what doesn't.<br>
+                    trust your own truth first 💛
+                </p>
+
+                <div class="action-buttons">
+                    <button class="action-btn" onclick="shareToSocial()">
+                        <div class="action-icon">🌸</div>
+                        <div class="action-content">
+                            <div class="action-title">share your truth</div>
+                            <div class="action-desc">tiktok story, instagram, anywhere you want</div>
+                        </div>
+                    </button>
+
+                    <button class="action-btn" onclick="downloadArt()">
+                        <div class="action-icon">🎨</div>
+                        <div class="action-content">
+                            <div class="action-title">download as art</div>
+                            <div class="action-desc">save this as a beautiful reminder</div>
+                        </div>
+                    </button>
+                </div>
+
+                <button class="try-again-btn" onclick="tryAgain()">
+                    share another truth 🪞
+                </button>
+            </div>
+        </div>
+
+    </div>
+
+    <a href="https://www.withouttoomuchthought.com" class="wtmt-link">withouttoomuchthought.com</a>
+
+    <script>
+        // 🌟 HEALING QUOTES FOR FLOATING CLOUDS
+        const healingQuotes = [
+            "real love doesn't\nkeep score...",
+            "you don't have to be strong\nto be worthy...",
+            "maybe it's time\nto be soft...",
+            "strength became your default\nbecause weakness wasn't safe...",
+            "you're not failing —\nyou're protecting...",
+            "this isn't weakness —\nthis is grief...",
+            "you don't owe anyone anything\nfor being chosen...",
+            "you're allowed to be\nuncertain...",
+            "what if this is exactly\nwhere you need to be?",
+            "your truth matters,\neven when it's quiet...",
+            "healing isn't linear,\nand that's okay...",
+            "you're doing better\nthan you think...",
+            "being seen\ndoesn't require being perfect...",
+            "your feelings\nare valid...",
+            "it's okay to not be okay\nright now..."
+        ];
+
+        // 🎨 INITIALIZE PARTICLE SYSTEM
+        function createParticles() {
+            const particleSystem = document.getElementById('particleSystem');
+            const particleCount = 30;
+            
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                
+                const leftPos = Math.random() * 100;
+                const duration = 8 + Math.random() * 12;
+                const delay = Math.random() * 10;
+                const drift = (Math.random() - 0.5) * 100;
+                
+                particle.style.left = leftPos + '%';
+                particle.style.animationDuration = duration + 's';
+                particle.style.animationDelay = delay + 's';
+                particle.style.setProperty('--drift', drift + 'px');
+                
+                particleSystem.appendChild(particle);
+            }
+        }
+
+        // 💭 INITIALIZE FLOATING QUOTE CLOUDS
+        function createQuoteClouds() {
+            const cloudContainer = document.getElementById('quoteClouds');
+            const cloudCount = 8;
+            
+            for (let i = 0; i < cloudCount; i++) {
+                const cloud = document.createElement('div');
+                cloud.className = 'quote-cloud';
+                cloud.textContent = healingQuotes[Math.floor(Math.random() * healingQuotes.length)];
+                
+                const leftPos = Math.random() * 90;
+                const duration = 20 + Math.random() * 15;
+                const delay = Math.random() * 20;
+                const drift = (Math.random() - 0.5) * 150;
+                const rotate = (Math.random() - 0.5) * 20;
+                
+                cloud.style.left = leftPos + '%';
+                cloud.style.animationDuration = duration + 's';
+                cloud.style.animationDelay = delay + 's';
+                cloud.style.setProperty('--cloud-drift', drift + '%');
+                cloud.style.setProperty('--cloud-rotate', rotate + 'deg');
+                
+                cloudContainer.appendChild(cloud);
+            }
+        }
+
+        // Initialize background effects
+        createParticles();
+        createQuoteClouds();
+
+        // 📝 MAIN SUBMISSION LOGIC
+        let currentUserInput = '';
+
+        async function submitThought() {
+            const input = document.getElementById('userInput').value.trim();
+            
+            if (!input) {
+                alert('share something first, love 💛');
+                return;
+            }
+
+            currentUserInput = input;
+            
+            // Switch views
+            document.getElementById('submissionView').classList.add('hidden');
+            document.getElementById('loadingView').classList.add('active');
+            
+            // TODO: Replace with your actual webhook URL
+            const WEBHOOK_URL = 'YOUR_WEBHOOK_URL_HERE';
+            
+            try {
+                const response = await fetch(WEBHOOK_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        original_text: input,
+                        user_ip: 'browser'
+                    })
+                });
+
+                const data = await response.json();
+                
+                // Hide loading
+                document.getElementById('loadingView').classList.remove('active');
+
+                if (data.error) {
+                    // Show limit message
+                    alert(data.message);
+                    document.getElementById('submissionView').classList.remove('hidden');
+                    return;
+                }
+                
+                // Show results
+                document.getElementById('userInputDisplay').innerText = `"${currentUserInput}"`;
+                document.getElementById('transformedText').innerText = data.transformed;
+                document.getElementById('resultView').classList.add('active');
+                
+                // Scroll to top smoothly
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+
+            } catch (error) {
+                console.error('Error:', error);
+                document.getElementById('loadingView').classList.remove('active');
+                alert('something went wrong. please try again 💛');
+                document.getElementById('submissionView').classList.remove('hidden');
+            }
+        }
+
+        // 🎨 SHARE TO SOCIAL (Download + Instructions)
+        async function shareToSocial() {
+            const canvas = createStoryCanvas();
+            
+            canvas.toBlob(async (blob) => {
+                // Try Web Share API first (mobile)
+                if (navigator.share && navigator.canShare) {
+                    try {
+                        const file = new File([blob], 'magicmirror-truth.png', { type: 'image/png' });
+                        
+                        if (navigator.canShare({ files: [file] })) {
+                            await navigator.share({
+                                files: [file],
+                                title: 'my truth, transformed',
+                                text: 'shared from magicmirror 🪞✨'
+                            });
+                            
+                            setTimeout(() => {
+                                alert('🌸 sharing complete!\n\nif you chose tiktok, tap "story" to share 💛');
+                            }, 300);
+                            return;
+                        }
+                    } catch (error) {
+                        console.log('Share cancelled or failed:', error);
+                    }
+                }
+                
+                // Fallback: Download
+                downloadBlob(blob, 'magicmirror-truth.png');
+                
+                setTimeout(() => {
+                    alert('💛 image saved!\n\nopen tiktok → tap + → upload → select image → story\n\nshare your truth 🪞✨');
+                }, 100);
+            }, 'image/png', 0.95);
+        }
+
+        // 🎨 DOWNLOAD AS ART
+        function downloadArt() {
+            const canvas = createStoryCanvas();
+            
+            canvas.toBlob((blob) => {
+                downloadBlob(blob, `magicmirror-${Date.now()}.png`);
+                
+                setTimeout(() => {
+                    alert('🎨 your reflection has been saved!\n\nshare it if it speaks to you 💛');
+                }, 100);
+            }, 'image/png', 0.95);
+        }
+
+        // 🖼️ CREATE STORY CANVAS (TikTok/Instagram 9:16)
+        function createStoryCanvas() {
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            
+            // TikTok Story dimensions
+            canvas.width = 1080;
+            canvas.height = 1920;
+            
+            // Dreamy gradient background
+            const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+            gradient.addColorStop(0, '#E8D5F2');
+            gradient.addColorStop(0.25, '#F9E4C8');
+            gradient.addColorStop(0.5, '#C8E6F9');
+            gradient.addColorStop(0.75, '#E5C8F9');
+            gradient.addColorStop(1, '#F9D5E8');
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            // Subtle texture overlay
+            ctx.globalAlpha = 0.03;
+            for (let i = 0; i < canvas.width; i += 3) {
+                ctx.strokeStyle = '#fff';
+                ctx.lineWidth = 1;
+                ctx.beginPath();
+                ctx.moveTo(i, 0);
+                ctx.lineTo(i, canvas.height);
+                ctx.stroke();
+            }
+            ctx.globalAlpha = 1;
+            
+            // Card dimensions
+            const margin = 100;
+            const cardPadding = 70;
+            const cardX = margin;
+            const cardY = margin + 100;
+            const cardWidth = canvas.width - (margin * 2);
+            const cardHeight = canvas.height - (margin * 2) - 200;
+            
+            // Glassmorphic card with shadow
+            ctx.shadowColor = 'rgba(0, 0, 0, 0.15)';
+            ctx.shadowBlur = 50;
+            ctx.shadowOffsetY = 25;
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
+            ctx.beginPath();
+            ctx.roundRect(cardX, cardY, cardWidth, cardHeight, 40);
+            ctx.fill();
+            ctx.shadowColor = 'transparent';
+            
+            // Inner glow
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.6)';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.roundRect(cardX + 1, cardY + 1, cardWidth - 2, cardHeight - 2, 40);
+            ctx.stroke();
+            
+            // Get transformed text
+            const transformedText = document.getElementById('transformedText').innerText;
+            const lines = transformedText.split('\n').filter(line => line.trim());
+            
+            // Text styling
+            ctx.fillStyle = '#3A3A3A';
+            ctx.font = 'italic 42px Georgia, serif';
+            ctx.textAlign = 'left';
+            ctx.textBaseline = 'top';
+            
+            // Wrap and draw text
+            function wrapText(lines, x, y, maxWidth, lineHeight) {
+                let currentY = y;
+                
+                lines.forEach((line, index) => {
+                    if (!line.trim()) {
+                        currentY += lineHeight * 0.6;
+                        return;
+                    }
+                    
+                    const words = line.split(' ');
+                    let currentLine = '';
+                    
+                    words.forEach((word) => {
+                        const testLine = currentLine + word + ' ';
+                        const metrics = ctx.measureText(testLine);
+                        
+                        if (metrics.width > maxWidth && currentLine !== '') {
+                            ctx.fillText(currentLine.trim(), x, currentY);
+                            currentLine = word + ' ';
+                            currentY += lineHeight;
+                        } else {
+                            currentLine = testLine;
+                        }
+                    });
+                    
+                    if (currentLine.trim()) {
+                        ctx.fillText(currentLine.trim(), x, currentY);
+                        currentY += lineHeight;
+                    }
+                });
+                
+                return currentY;
+            }
+            
+            const textX = cardX + cardPadding;
+            const textY = cardY + cardPadding;
+            const textMaxWidth = cardWidth - (cardPadding * 2);
+            const lineHeight = 58;
+            
+            wrapText(lines, textX, textY, textMaxWidth, lineHeight);
+            
+            // Divider line
+            ctx.strokeStyle = 'rgba(0, 0, 0, 0.1)';
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(cardX + 100, cardY + cardHeight - 140);
+            ctx.lineTo(cardX + cardWidth - 100, cardY + cardHeight - 140);
+            ctx.stroke();
+            
+            // Signature
+            ctx.textAlign = 'center';
+            ctx.font = '28px Georgia, serif';
+            ctx.fillStyle = 'rgba(58, 58, 58, 0.6)';
+            ctx.fillText('transformed with love by magicmirror 🪞✨', 
+                canvas.width / 2, cardY + cardHeight - 95);
+            
+            ctx.font = '24px sans-serif';
+            ctx.fillStyle = 'rgba(58, 58, 58, 0.5)';
+            ctx.fillText('@withouttoomuchthought', 
+                canvas.width / 2, cardY + cardHeight - 55);
+            
+            return canvas;
+        }
+
+        // Helper: Download blob as file
+        function downloadBlob(blob, filename) {
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        // 🔄 TRY AGAIN
+        function tryAgain() {
+            document.getElementById('resultView').classList.remove('active');
+            document.getElementById('submissionView').classList.remove('hidden');
+            document.getElementById('userInput').value = '';
+            currentUserInput = '';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // ⌨️ ENTER KEY SUBMISSION
+        document.getElementById('userInput').addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                submitThought();
+            }
+        });
+    </script>
+</body>
+</html>
