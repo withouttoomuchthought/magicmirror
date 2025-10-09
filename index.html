@@ -1352,8 +1352,15 @@
                 
                 // INSTANT transition to results!
                 document.getElementById('submissionView').classList.add('hidden');
+                // NEW CODE:
+                console.log('Full response:', data); // Let's see what we got!
+
+                const transformedText = data.transformed || 
+                       (data.content && data.content[0] && data.content[0].text) || 
+                       'transformation received but in unexpected format';
+
                 document.getElementById('userInputDisplay').innerText = `"${currentUserInput}"`;
-                document.getElementById('transformedText').innerText = data.transformed;
+                document.getElementById('transformedText').innerText = transformedText;
                 document.getElementById('resultView').classList.add('active');
                 
                 // Celebration particle burst!
