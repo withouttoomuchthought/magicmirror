@@ -1,0 +1,947 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>magicmirror 🪞✨</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Karla:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: 'Karla', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #E8B8D8 0%, #C8A8E8 35%, #B8A8D8 65%, #E8C8D8 100%);
+            background-size: 400% 400%;
+            background-attachment: fixed;
+            min-height: 100vh;
+            padding: 20px;
+            color: #3A3A3A;
+            animation: gradientFlow 20s ease infinite;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        @keyframes gradientFlow {
+            0%, 100% { background-position: 0% 50%; }
+            25% { background-position: 50% 100%; }
+            50% { background-position: 100% 50%; }
+            75% { background-position: 50% 0%; }
+        }
+
+        @keyframes holoShift {
+            0%, 100% { background-position: 0% center; }
+            50% { background-position: 200% center; }
+        }
+
+        @keyframes logoFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+
+        @keyframes emojiRotate {
+            0%, 100% {
+                transform: scale(1) rotate(0deg);
+            }
+            50% {
+                transform: scale(1.15) rotate(10deg);
+            }
+        }
+
+        @keyframes breathe {
+            0%, 100% { 
+                transform: scale(1); 
+                opacity: 0.6; 
+            }
+            50% { 
+                transform: scale(1.3); 
+                opacity: 0.9; 
+            }
+        }
+
+        @keyframes fadeIn {
+            from { 
+                opacity: 0; 
+                transform: translateY(20px); 
+            }
+            to { 
+                opacity: 1; 
+                transform: translateY(0); 
+            }
+        }
+
+        @keyframes sparkleFloat {
+            0% {
+                opacity: 0;
+                transform: translate(0, 0) rotate(0deg) scale(0.8);
+            }
+            15% { opacity: 0.6; }
+            50% {
+                opacity: 0.9;
+                transform: translate(50px, -70px) rotate(180deg) scale(1.3);
+            }
+            85% { opacity: 0.5; }
+            100% {
+                opacity: 0;
+                transform: translate(100px, -140px) rotate(360deg) scale(1);
+            }
+        }
+
+        .container {
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .view {
+            display: none;
+            animation: fadeIn 0.8s ease;
+        }
+
+        .view.active {
+            display: block;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.4);
+            backdrop-filter: blur(25px) saturate(180%);
+            -webkit-backdrop-filter: blur(25px) saturate(180%);
+            border-radius: 28px;
+            padding: 40px 32px;
+            box-shadow: 
+                0 12px 40px rgba(0, 0, 0, 0.1),
+                0 0 0 1px rgba(229, 217, 242, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            position: relative;
+        }
+
+        .holographic-logo {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .holographic-text {
+            background: linear-gradient(
+                90deg,
+                #E8E3FF 0%,
+                #FFE8F5 20%,
+                #E3FFFA 40%,
+                #FFF8E8 60%,
+                #FFE8F5 80%,
+                #E8E3FF 100%
+            );
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: holoShift 6s ease-in-out infinite, logoFloat 4s ease-in-out infinite;
+            filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.5))
+                    drop-shadow(0 0 40px rgba(229, 217, 242, 0.4));
+            font-family: Georgia, serif;
+            font-weight: 700;
+            font-size: 2.5rem;
+            text-transform: lowercase;
+            letter-spacing: 1px;
+            margin: 0;
+            line-height: 1;
+        }
+
+        .holographic-emoji {
+            display: inline-block;
+            margin-left: 8px;
+            font-size: 1.1em;
+            animation: emojiRotate 5s ease-in-out infinite;
+            filter: drop-shadow(0 0 12px rgba(249, 228, 166, 0.6));
+        }
+
+        .tagline {
+            font-size: 0.95rem;
+            color: rgba(58, 58, 58, 0.7);
+            margin-top: 12px;
+            font-style: italic;
+            opacity: 0.85;
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 180px;
+            padding: 22px;
+            border: none;
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.6);
+            font-family: Georgia, serif;
+            font-size: 1.05rem;
+            line-height: 1.7;
+            resize: none;
+            color: #3A3A3A;
+            box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            -webkit-appearance: none;
+            margin-bottom: 20px;
+        }
+
+        textarea:focus {
+            outline: none;
+            background: rgba(255, 255, 255, 0.75);
+            box-shadow: 
+                inset 0 2px 12px rgba(184, 197, 176, 0.15),
+                0 0 0 3px rgba(229, 217, 242, 0.3);
+            transform: scale(1.01);
+        }
+
+        textarea::placeholder {
+            color: rgba(58, 58, 58, 0.5);
+            font-style: italic;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, rgba(212, 197, 226, 0.6), rgba(249, 228, 166, 0.6));
+            color: #3A3A3A;
+            border: 2px solid rgba(255, 255, 255, 0.7);
+            border-radius: 50px;
+            font-size: 1.05rem;
+            font-weight: 600;
+            font-family: 'Karla', sans-serif;
+            text-transform: lowercase;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 
+                0 8px 25px rgba(212, 197, 226, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.7);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 
+                0 12px 35px rgba(212, 197, 226, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.8);
+        }
+
+        .submit-btn:active {
+            transform: scale(0.98);
+        }
+
+        .footer-note {
+            margin-top: 28px;
+            font-size: 0.85rem;
+            color: rgba(58, 58, 58, 0.6);
+            font-style: italic;
+            line-height: 1.7;
+            text-align: center;
+        }
+
+        .loading-circle {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 28px;
+            border-radius: 50%;
+            background: rgba(212, 197, 226, 0.4);
+            animation: breathe 3s ease-in-out infinite;
+            box-shadow: 0 0 30px rgba(229, 217, 242, 0.5);
+        }
+
+        .loading-text {
+            font-size: 1.1rem;
+            color: rgba(58, 58, 58, 0.7);
+            font-style: italic;
+            text-align: center;
+            margin-bottom: 12px;
+        }
+
+        .loading-emoji {
+            font-size: 1.8rem;
+            text-align: center;
+            animation: emojiRotate 3s ease-in-out infinite;
+            filter: drop-shadow(0 0 15px rgba(249, 228, 166, 0.6));
+        }
+
+        .section-label {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: rgba(58, 58, 58, 0.5);
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+
+        .user-input-display {
+            font-family: Georgia, serif;
+            font-size: 0.95rem;
+            line-height: 1.7;
+            color: rgba(58, 58, 58, 0.7);
+            font-style: italic;
+            padding: 20px;
+            background: rgba(184, 197, 176, 0.15);
+            border-radius: 16px;
+            border-left: 3px solid rgba(184, 197, 176, 0.5);
+            margin-bottom: 24px;
+        }
+
+        .divider {
+            height: 1px;
+            background: linear-gradient(90deg, 
+                transparent, 
+                rgba(0,0,0,0.08), 
+                transparent);
+            margin: 28px 0;
+        }
+
+        .transformed-box {
+            font-family: Georgia, serif;
+            font-size: 1.15rem;
+            line-height: 1.85;
+            color: #3A3A3A;
+            text-transform: lowercase;
+            padding: 32px;
+            background: linear-gradient(135deg, 
+                rgba(232, 227, 255, 0.4) 0%, 
+                rgba(255, 232, 245, 0.4) 50%, 
+                rgba(227, 255, 250, 0.4) 100%);
+            border-radius: 20px;
+            font-style: italic;
+            white-space: pre-line;
+            margin-bottom: 24px;
+            box-shadow: 
+                inset 0 1px 3px rgba(255, 255, 255, 0.6), 
+                0 4px 12px rgba(229, 217, 242, 0.2);
+        }
+
+        .signature {
+            font-size: 0.7rem;
+            color: rgba(58, 58, 58, 0.5);
+            font-style: italic;
+            text-align: center;
+            padding-top: 16px;
+            border-top: 1px solid rgba(0,0,0,0.06);
+        }
+
+        .ai-disclaimer {
+            font-size: 0.75rem;
+            color: rgba(58, 58, 58, 0.55);
+            font-style: italic;
+            text-align: center;
+            margin-top: 16px;
+            line-height: 1.5;
+        }
+
+        .action-buttons {
+            margin-top: 28px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .action-btn {
+            padding: 18px 20px;
+            background: rgba(255, 255, 255, 0.6);
+            border: 2px solid rgba(255, 255, 255, 0.7);
+            border-radius: 18px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: left;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            font-family: 'Karla', sans-serif;
+            box-shadow: 
+                0 2px 8px rgba(0, 0, 0, 0.05),
+                inset 0 1px 0 rgba(255, 255, 255, 0.8);
+        }
+
+        .action-btn:hover {
+            background: rgba(255, 255, 255, 0.8);
+            transform: translateY(-2px);
+            box-shadow: 
+                0 4px 12px rgba(0, 0, 0, 0.08),
+                inset 0 1px 0 rgba(255, 255, 255, 0.9);
+        }
+
+        .action-btn:active {
+            transform: scale(0.98);
+        }
+
+        .action-icon {
+            font-size: 1.4rem;
+            flex-shrink: 0;
+        }
+
+        .action-content {
+            flex: 1;
+        }
+
+        .action-title {
+            font-weight: 600;
+            font-size: 1rem;
+            margin-bottom: 4px;
+            text-transform: lowercase;
+            color: #3A3A3A;
+        }
+
+        .action-desc {
+            font-size: 0.85rem;
+            color: rgba(58, 58, 58, 0.6);
+            font-style: italic;
+        }
+
+        .try-again-btn {
+            margin-top: 20px;
+            padding: 16px;
+            background: transparent;
+            color: rgba(58, 58, 58, 0.7);
+            border: 2px solid rgba(212, 197, 226, 0.4);
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: lowercase;
+            width: 100%;
+            font-family: 'Karla', sans-serif;
+            font-size: 1rem;
+            font-weight: 500;
+        }
+
+        .try-again-btn:hover {
+            background: linear-gradient(135deg, 
+                rgba(212, 197, 226, 0.15), 
+                rgba(249, 228, 166, 0.15));
+            border-color: rgba(184, 197, 176, 0.5);
+            color: #3A3A3A;
+            transform: translateY(-2px);
+        }
+
+        .try-again-btn:active {
+            transform: scale(0.98);
+        }
+
+        .wtmt-link {
+            position: fixed;
+            bottom: 16px;
+            right: 16px;
+            font-size: 0.75rem;
+            color: rgba(58, 58, 58, 0.4);
+            text-decoration: none;
+            font-style: italic;
+            transition: color 0.3s ease;
+        }
+
+        .wtmt-link:hover {
+            color: rgba(58, 58, 58, 0.7);
+        }
+
+        /* Sparkle effects */
+        .sparkle {
+            position: fixed;
+            pointer-events: none;
+            z-index: 1;
+            animation: sparkleFloat 8s ease-in-out;
+        }
+
+        /* Mobile optimization */
+        @media (max-width: 480px) {
+            body { 
+                padding: 16px; 
+            }
+            
+            .holographic-text { 
+                font-size: 2rem; 
+            }
+            
+            .glass-card { 
+                padding: 32px 24px; 
+            }
+            
+            textarea { 
+                min-height: 150px; 
+                font-size: 1rem; 
+            }
+            
+            .transformed-box { 
+                font-size: 1.05rem; 
+                padding: 24px; 
+            }
+        }
+
+        /* Accessibility */
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        
+        <!-- SUBMISSION VIEW -->
+        <div id="submissionView" class="view active">
+            <div class="holographic-logo">
+                <h1 class="holographic-text">
+                    magicmirror<span class="holographic-emoji">🪞✨</span>
+                </h1>
+                <p class="tagline">
+                    your truth, transformed withouttoomuchthought.
+                </p>
+            </div>
+
+            <div class="glass-card">
+                <textarea 
+                    id="userInput" 
+                    placeholder="what's on your heart?" 
+                    maxlength="500"
+                    aria-label="Share your thoughts"
+                ></textarea>
+                
+                <button class="submit-btn" onclick="submitThought()" aria-label="Transform your words">
+                    transform 🪞✨
+                </button>
+
+                <div class="footer-note">
+                    write whatever you're feeling.<br>
+                    no filter. no perfection.<br>
+                    this is a safe space to be honest.<br><br>
+                    anonymous. safe. free. 💛
+                </div>
+            </div>
+        </div>
+
+        <!-- LOADING VIEW -->
+        <div id="loadingView" class="view">
+            <div class="glass-card" style="text-align: center;">
+                <div class="loading-circle"></div>
+                <p class="loading-text">holding your words gently...</p>
+                <div class="loading-emoji">🪞✨</div>
+            </div>
+        </div>
+
+        <!-- RESULT VIEW -->
+        <div id="resultView" class="view">
+            <div class="holographic-logo" style="margin-bottom: 24px;">
+                <h1 class="holographic-text" style="font-size: 2rem;">
+                    magicmirror<span class="holographic-emoji">🪞✨</span>
+                </h1>
+            </div>
+
+            <div class="glass-card">
+                <div class="section-label">you wrote:</div>
+                <div class="user-input-display" id="userInputDisplay"></div>
+                
+                <div class="divider"></div>
+                
+                <div class="section-label">here's what we hear you saying 🪞✨</div>
+                <div class="transformed-box" id="transformedText"></div>
+                
+                <div class="signature">
+                    transformed with love by magicmirror | @withouttoomuchthought + claude creation 🪞✨
+                </div>
+                
+                <p class="ai-disclaimer">
+                    these reflections come from ai. take what resonates, leave what doesn't. trust your own truth first 💛
+                </p>
+
+                <div class="action-buttons">
+                    <button class="action-btn" onclick="shareToSocial()" aria-label="Share your truth">
+                        <div class="action-icon">🌸</div>
+                        <div class="action-content">
+                            <div class="action-title">share your truth</div>
+                            <div class="action-desc">tiktok story, instagram, anywhere you want</div>
+                        </div>
+                    </button>
+
+                    <button class="action-btn" onclick="downloadArt()" aria-label="Download as art">
+                        <div class="action-icon">🎨</div>
+                        <div class="action-content">
+                            <div class="action-title">download as art</div>
+                            <div class="action-desc">save this as a beautiful reminder</div>
+                        </div>
+                    </button>
+                </div>
+
+                <button class="try-again-btn" onclick="tryAgain()" aria-label="Share another truth">
+                    share another truth 🪞
+                </button>
+            </div>
+        </div>
+
+    </div>
+
+    <a href="https://www.withouttoomuchthought.com" class="wtmt-link" aria-label="Visit Without Too Much Thought">withouttoomuchthought.com</a>
+
+    <script>
+        // ========================================
+        // CONFIGURATION
+        // ========================================
+        
+        // Make.com webhook URL (this is safe to include - webhooks are public endpoints)
+        const WEBHOOK_URL = 'https://hook.us2.make.com/ds2oyv9bi33hoq4rcgobqht654qmh5kb';
+
+        // ========================================
+        // SPARKLE EFFECTS
+        // ========================================
+        
+        function addSparkle() {
+            if (Math.random() > 0.4) {
+                const sparkle = document.createElement('div');
+                sparkle.className = 'sparkle';
+                sparkle.textContent = Math.random() > 0.5 ? '✨' : '💫';
+                sparkle.style.left = Math.random() * 100 + '%';
+                sparkle.style.top = Math.random() * 100 + '%';
+                sparkle.style.fontSize = '12px';
+                
+                document.body.appendChild(sparkle);
+                setTimeout(() => sparkle.remove(), 8000);
+            }
+        }
+
+        // Add sparkles periodically
+        setInterval(addSparkle, 3500);
+
+        // ========================================
+        // ROTATING PLACEHOLDER TEXT
+        // ========================================
+        
+        const prompts = [
+            "what's on your heart?",
+            "what are you carrying today?",
+            "what truth wants to be held?",
+            "tell me what you're feeling...",
+            "what's been heavy lately?",
+            "what do you need to release?"
+        ];
+
+        let promptIndex = 0;
+        const textarea = document.getElementById('userInput');
+
+        function rotatePrompt() {
+            textarea.placeholder = prompts[promptIndex];
+            promptIndex = (promptIndex + 1) % prompts.length;
+        }
+
+        setInterval(rotatePrompt, 4000);
+
+        // ========================================
+        // MAIN FUNCTIONALITY
+        // ========================================
+        
+        let currentUserInput = '';
+
+        async function submitThought() {
+            const input = document.getElementById('userInput').value.trim();
+            
+            if (!input) {
+                alert('please share something first, love 💛');
+                return;
+            }
+
+            // Check if webhook URL is configured
+            if (WEBHOOK_URL === 'YOUR_WEBHOOK_URL_HERE') {
+                alert('webhook not configured yet! please add your Make.com webhook URL to the code 💛');
+                return;
+            }
+
+            currentUserInput = input;
+
+            // Show loading
+            document.getElementById('submissionView').classList.remove('active');
+            document.getElementById('loadingView').classList.add('active');
+
+            try {
+                // Call Make.com webhook
+                const response = await fetch(WEBHOOK_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        original_text: input,
+                        user_ip: 'browser'
+                    })
+                });
+
+                // Check if response is ok
+                if (!response.ok) {
+                    throw new Error(`Server returned ${response.status}`);
+                }
+
+                const data = await response.json();
+
+                // Hide loading
+                document.getElementById('loadingView').classList.remove('active');
+
+                // Check for errors
+                if (data.error) {
+                    alert(data.message);
+                    document.getElementById('submissionView').classList.add('active');
+                    return;
+                }
+
+                // Show result
+                document.getElementById('userInputDisplay').textContent = `"${currentUserInput}"`;
+                document.getElementById('transformedText').textContent = data.transformed;
+                document.getElementById('resultView').classList.add('active');
+
+                // Scroll to top smoothly
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+
+            } catch (error) {
+                console.error('Error:', error);
+                
+                // Hide loading
+                document.getElementById('loadingView').classList.remove('active');
+                
+                // Show error
+                alert('something went wrong. please try again 💛\n\n(check console for details)');
+                
+                // Return to submission
+                document.getElementById('submissionView').classList.add('active');
+            }
+        }
+
+        // ========================================
+        // SHARE FUNCTIONALITY
+        // ========================================
+
+        async function shareToSocial() {
+            const canvas = createStoryCanvas();
+            
+            canvas.toBlob(async (blob) => {
+                // Try Web Share API first
+                if (navigator.share && navigator.canShare) {
+                    try {
+                        const file = new File([blob], 'magicmirror-truth.png', { 
+                            type: 'image/png' 
+                        });
+                        
+                        if (navigator.canShare({ files: [file] })) {
+                            await navigator.share({
+                                files: [file],
+                                title: 'my truth, transformed',
+                                text: 'shared from magicmirror 🪞✨'
+                            });
+                            
+                            setTimeout(() => {
+                                alert('🌸 sharing complete!\n\nif you chose tiktok, tap "story" to share 💛');
+                            }, 300);
+                            return;
+                        }
+                    } catch (error) {
+                        console.log('Share cancelled or failed:', error);
+                    }
+                }
+                
+                // Fallback: download the image
+                downloadBlob(blob, `magicmirror-${Date.now()}.png`);
+                
+                setTimeout(() => {
+                    alert('💛 image saved!\n\nopen tiktok → tap + → upload → select image → story\n\nshare your truth 🪞✨');
+                }, 100);
+            }, 'image/png', 0.95);
+        }
+
+        function downloadArt() {
+            const canvas = createStoryCanvas();
+            
+            canvas.toBlob((blob) => {
+                downloadBlob(blob, `magicmirror-${Date.now()}.png`);
+                
+                setTimeout(() => {
+                    alert('🎨 your reflection has been saved!\n\nshare it if it speaks to you 💛');
+                }, 100);
+            }, 'image/png', 0.95);
+        }
+
+        function downloadBlob(blob, filename) {
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        // ========================================
+        // CANVAS STORY GENERATION
+        // ========================================
+
+        function createStoryCanvas() {
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            
+            // TikTok/Instagram Story dimensions (9:16)
+            canvas.width = 1080;
+            canvas.height = 1920;
+            
+            // Dreamy gradient background
+            const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+            gradient.addColorStop(0, '#E8B8D8');
+            gradient.addColorStop(0.35, '#C8A8E8');
+            gradient.addColorStop(0.65, '#B8A8D8');
+            gradient.addColorStop(1, '#E8C8D8');
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            // Subtle texture
+            ctx.globalAlpha = 0.03;
+            for (let i = 0; i < canvas.width; i += 3) {
+                ctx.strokeStyle = '#fff';
+                ctx.lineWidth = 1;
+                ctx.beginPath();
+                ctx.moveTo(i, 0);
+                ctx.lineTo(i, canvas.height);
+                ctx.stroke();
+            }
+            ctx.globalAlpha = 1;
+            
+            // Glass card dimensions
+            const margin = 100;
+            const cardPadding = 70;
+            const cardX = margin;
+            const cardY = margin + 100;
+            const cardWidth = canvas.width - (margin * 2);
+            const cardHeight = canvas.height - (margin * 2) - 200;
+            
+            // Draw glass card
+            ctx.shadowColor = 'rgba(0, 0, 0, 0.15)';
+            ctx.shadowBlur = 50;
+            ctx.shadowOffsetY = 25;
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
+            ctx.beginPath();
+            ctx.roundRect(cardX, cardY, cardWidth, cardHeight, 40);
+            ctx.fill();
+            ctx.shadowColor = 'transparent';
+            
+            // Get transformation text
+            const transformedText = document.getElementById('transformedText').textContent;
+            const lines = transformedText.split('\n').filter(line => line.trim());
+            
+            // Text styling
+            ctx.fillStyle = '#3A3A3A';
+            ctx.font = 'italic 44px Georgia, serif';
+            ctx.textAlign = 'left';
+            ctx.textBaseline = 'top';
+            
+            // Wrap and render text
+            function wrapText(lines, x, y, maxWidth, lineHeight) {
+                let currentY = y;
+                
+                lines.forEach((line) => {
+                    if (!line.trim()) {
+                        currentY += lineHeight * 0.6;
+                        return;
+                    }
+                    
+                    const words = line.split(' ');
+                    let currentLine = '';
+                    
+                    words.forEach((word) => {
+                        const testLine = currentLine + word + ' ';
+                        const metrics = ctx.measureText(testLine);
+                        
+                        if (metrics.width > maxWidth && currentLine !== '') {
+                            ctx.fillText(currentLine.trim(), x, currentY);
+                            currentLine = word + ' ';
+                            currentY += lineHeight;
+                        } else {
+                            currentLine = testLine;
+                        }
+                    });
+                    
+                    if (currentLine.trim()) {
+                        ctx.fillText(currentLine.trim(), x, currentY);
+                        currentY += lineHeight;
+                    }
+                });
+            }
+            
+            const textX = cardX + cardPadding;
+            const textY = cardY + cardPadding;
+            const textMaxWidth = cardWidth - (cardPadding * 2);
+            const lineHeight = 62;
+            
+            wrapText(lines, textX, textY, textMaxWidth, lineHeight);
+            
+            // Signature
+            ctx.textAlign = 'center';
+            ctx.font = '26px Georgia, serif';
+            ctx.fillStyle = 'rgba(58, 58, 58, 0.55)';
+            ctx.fillText('transformed with love by magicmirror', 
+                canvas.width / 2, cardY + cardHeight - 105);
+            
+            ctx.font = '24px sans-serif';
+            ctx.fillStyle = 'rgba(58, 58, 58, 0.5)';
+            ctx.fillText('a @withouttoomuchthought and claude creation 🪞✨', 
+                canvas.width / 2, cardY + cardHeight - 65);
+            
+            return canvas;
+        }
+
+        // ========================================
+        // TRY AGAIN
+        // ========================================
+
+        function tryAgain() {
+            document.getElementById('resultView').classList.remove('active');
+            document.getElementById('submissionView').classList.add('active');
+            document.getElementById('userInput').value = '';
+            currentUserInput = '';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // ========================================
+        // KEYBOARD SHORTCUTS
+        // ========================================
+
+        document.getElementById('userInput').addEventListener('keydown', function(e) {
+            // Submit on Enter (without Shift)
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                submitThought();
+            }
+        });
+
+        // ========================================
+        // DEBUG MODE (add ?debug=true to URL)
+        // ========================================
+
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('debug') === 'true') {
+            console.log('🪞 Debug mode enabled');
+            console.log('Webhook URL:', WEBHOOK_URL);
+            
+            // Add visual indicator
+            const debugBadge = document.createElement('div');
+            debugBadge.textContent = '🔧 debug mode';
+            debugBadge.style.cssText = `
+                position: fixed;
+                top: 10px;
+                left: 10px;
+                background: rgba(0,0,0,0.8);
+                color: #0f0;
+                padding: 8px 12px;
+                border-radius: 6px;
+                font-family: monospace;
+                font-size: 11px;
+                z-index: 9999;
+            `;
+            document.body.appendChild(debugBadge);
+        }
+    </script>
+</body>
+</html>
