@@ -1,0 +1,419 @@
+export default {
+  async fetch(request, env, ctx) {
+    const url = new URL(request.url);
+
+    // Handle CORS preflight
+    if (request.method === 'OPTIONS') {
+      return new Response(null, {
+        headers: {
+          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Methods': 'POST, OPTIONS',
+          'Access-Control-Allow-Headers': 'Content-Type',
+        },
+      });
+    }
+
+    // If someone visits the root, show them the magical landing page
+    if (url.pathname === '/' && request.method === 'GET') {
+      return new Response(
+        `<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>magicmirror 🪞✨</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Karla:wght@300;400;600&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Karla', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #E8B8D8 0%, #C8A8E8 35%, #B8A8D8 65%, #E8C8D8 100%);
+            background-size: 400% 400%;
+            animation: gradientFlow 20s ease infinite;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        @keyframes gradientFlow {
+            0%, 100% { background-position: 0% 50%; }
+            25% { background-position: 50% 100%; }
+            50% { background-position: 100% 50%; }
+            75% { background-position: 50% 0%; }
+        }
+
+        @keyframes holoShift {
+            0%, 100% { background-position: 0% center; }
+            50% { background-position: 200% center; }
+        }
+
+        @keyframes logoFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+
+        @keyframes emojiRotate {
+            0%, 100% { transform: scale(1) rotate(0deg); }
+            50% { transform: scale(1.15) rotate(10deg); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.6; }
+            50% { opacity: 1; }
+        }
+
+        @keyframes floatParticle {
+            0% {
+                transform: translateY(100vh) translateX(0) scale(0);
+                opacity: 0;
+            }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% {
+                transform: translateY(-100px) translateX(var(--drift)) scale(1);
+                opacity: 0;
+            }
+        }
+
+        .particle-system {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .particle {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background: rgba(255, 255, 255, 0.6);
+            border-radius: 50%;
+            bottom: -10px;
+            animation: floatParticle linear infinite;
+            box-shadow: 0 0 4px rgba(255, 255, 255, 0.8);
+        }
+
+        .container {
+            text-align: center;
+            z-index: 10;
+            animation: fadeIn 1s ease;
+        }
+
+        .logo {
+            font-family: Georgia, serif;
+            font-weight: 700;
+            font-size: clamp(2.5rem, 8vw, 5rem);
+            text-transform: lowercase;
+            letter-spacing: 1px;
+            margin-bottom: 20px;
+            
+            background: linear-gradient(
+                90deg,
+                #E8E3FF 0%,
+                #FFE8F5 20%,
+                #E3FFFA 40%,
+                #FFF8E8 60%,
+                #FFE8F5 80%,
+                #E8E3FF 100%
+            );
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: holoShift 6s ease-in-out infinite, logoFloat 4s ease-in-out infinite;
+            filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.5))
+                    drop-shadow(0 0 40px rgba(229, 217, 242, 0.4));
+        }
+
+        .emoji {
+            display: inline-block;
+            margin-left: 12px;
+            animation: emojiRotate 5s ease-in-out infinite;
+            filter: drop-shadow(0 0 12px rgba(249, 228, 166, 0.6));
+        }
+
+        .tagline {
+            font-size: clamp(0.9rem, 2vw, 1.1rem);
+            color: rgba(58, 58, 58, 0.8);
+            font-style: italic;
+            margin-bottom: 30px;
+        }
+
+        .status {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(15px);
+            padding: 12px 24px;
+            border-radius: 50px;
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+            font-size: 0.95rem;
+            color: rgba(58, 58, 58, 0.9);
+        }
+
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            background: #50c878;
+            border-radius: 50%;
+            animation: pulse 2s ease infinite;
+            box-shadow: 0 0 10px rgba(80, 200, 120, 0.6);
+        }
+
+        .redirect-text {
+            margin-top: 30px;
+            font-size: 0.85rem;
+            color: rgba(58, 58, 58, 0.6);
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <div class="particle-system" id="particles"></div>
+    
+    <div class="container">
+        <div class="logo">
+            magicmirror<span class="emoji">🪞✨</span>
+        </div>
+        <p class="tagline">
+            your truth, transformed withouttoomuchthought
+        </p>
+        <div class="status">
+            <div class="status-dot"></div>
+            <span>worker active & ready</span>
+        </div>
+        <p class="redirect-text">
+            taking you home in 3 seconds... 💛
+        </p>
+    </div>
+
+    <script>
+        // Create floating particles
+        function createParticles() {
+            const particleSystem = document.getElementById('particles');
+            const particleCount = window.innerWidth < 768 ? 15 : 25;
+            
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                
+                const leftPos = Math.random() * 100;
+                const duration = 8 + Math.random() * 8;
+                const delay = Math.random() * 10;
+                const drift = (Math.random() - 0.5) * 100;
+                
+                particle.style.left = leftPos + '%';
+                particle.style.animationDuration = duration + 's';
+                particle.style.animationDelay = delay + 's';
+                particle.style.setProperty('--drift', drift + 'px');
+                
+                particleSystem.appendChild(particle);
+            }
+        }
+        
+        createParticles();
+        
+        // Redirect after 3 seconds
+        setTimeout(() => {
+            window.location.href = 'https://withouttoomuchthought.github.io/magicmirror/';
+        }, 3000);
+    </script>
+</body>
+</html>`,
+        {
+          status: 200,
+          headers: {
+            'Content-Type': 'text/html; charset=utf-8',
+          },
+        }
+      );
+    }
+
+    // Only accept POST requests for API calls
+    if (request.method !== 'POST') {
+      console.log('❌ Non-POST request rejected:', request.method);
+      return new Response(
+        JSON.stringify({ 
+          error: 'method_not_allowed', 
+          message: 'only POST requests accepted 💛' 
+        }),
+        { 
+          status: 405,
+          headers: {
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': '*',
+          }
+        }
+      );
+    }
+
+    try {
+      console.log('🌟 Starting transformation request...');
+      
+      const body = await request.json();
+      const { original_text, user_ip } = body;
+
+      console.log('📝 Received text:', original_text?.substring(0, 50) + '...');
+      console.log('📍 User IP:', user_ip || 'unknown');
+
+      if (!original_text) {
+        console.log('❌ Missing original_text in request');
+        return new Response(
+          JSON.stringify({ 
+            error: 'missing_text', 
+            message: 'please share something first 💛' 
+          }),
+          { 
+            status: 400,
+            headers: {
+              'Content-Type': 'application/json',
+              'Access-Control-Allow-Origin': '*'
+            }
+          }
+        );
+      }
+
+      // Call Claude API to transform the text
+      console.log('🤖 Calling Claude API...');
+      const claudeResponse = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-api-key': env.CLAUDE_API_KEY,
+          'anthropic-version': '2023-06-01'
+        },
+        body: JSON.stringify({
+          model: 'claude-sonnet-4-20250514',
+          max_tokens: 1024,
+          messages: [{
+            role: 'user',
+            content: `you are the magical voice of magicmirror 🪞✨ — a gentle truth-teller who transforms what people share into their highest, most empowered version.
+
+when someone shares a fear, limiting belief, or heavy truth with you, you:
+- acknowledge what they're feeling (validate it, don't dismiss it)
+- then gently flip the perspective to show them a more empowering truth
+- use poetic, soft, lowercase language
+- keep it brief (2-4 short lines max)
+- make it feel like a whisper from their future self
+
+transform this:
+"${original_text}"
+
+respond with ONLY the transformed text, nothing else.`
+          }]
+        })
+      });
+
+      if (!claudeResponse.ok) {
+        const errorText = await claudeResponse.text();
+        console.error('❌ Claude API error:', claudeResponse.status, errorText);
+        throw new Error('claude API error: ' + claudeResponse.status);
+      }
+
+      const claudeData = await claudeResponse.json();
+      const transformed_text = claudeData.content[0].text;
+      
+      console.log('✅ Claude transformation complete!');
+      console.log('✨ Transformed text:', transformed_text.substring(0, 100) + '...');
+
+      // Write to Airtable
+      console.log('📝 Attempting to write to Airtable...');
+      console.log('🔑 Using Base ID:', env.AIRTABLE_BASE_ID);
+      console.log('📊 Using Table ID:', env.AIRTABLE_TABLE_ID);
+      
+      const airtableUrl = `https://api.airtable.com/v0/${env.AIRTABLE_BASE_ID}/${env.AIRTABLE_TABLE_ID}`;
+      console.log('🌐 Airtable URL:', airtableUrl);
+      
+      const airtablePayload = {
+        fields: {
+          original_text: original_text,
+          transformed_text: transformed_text,
+          user_ip: user_ip || 'unknown',
+          is_public: false,
+          heart_count: 0,
+          created_at: new Date().toISOString()
+        }
+      };
+      
+      console.log('📦 Airtable payload:', JSON.stringify(airtablePayload, null, 2));
+      
+      const airtableResponse = await fetch(airtableUrl, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${env.AIRTABLE_API_KEY}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(airtablePayload)
+      });
+
+      console.log('📡 Airtable response status:', airtableResponse.status);
+
+      if (!airtableResponse.ok) {
+        const errorText = await airtableResponse.text();
+        console.error('❌ Airtable error response:', errorText);
+        // Don't throw - we still want to return the transformation to the user
+        console.error('⚠️ Airtable write failed, but continuing anyway');
+      } else {
+        const airtableData = await airtableResponse.json();
+        console.log('✅ Airtable write successful! Record ID:', airtableData.id);
+      }
+
+      // Return the transformation to the user in the format the frontend expects
+      const successResponse = {
+        success: true,
+        transformed: transformed_text
+      };
+      
+      console.log('🎉 Sending success response to user');
+      
+      return new Response(
+        JSON.stringify(successResponse),
+        {
+          status: 200,
+          headers: {
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': '*',
+          }
+        }
+      );
+
+    } catch (error) {
+      console.error('💥 Worker error caught:', error.message);
+      console.error('📚 Full error:', error);
+      
+      return new Response(
+        JSON.stringify({ 
+          error: 'internal_error', 
+          message: 'something went wrong 💛',
+          details: error.message
+        }),
+        { 
+          status: 500,
+          headers: {
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': '*'
+          }
+        }
+      );
+    }
+  },
+};
