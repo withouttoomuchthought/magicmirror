@@ -5,42 +5,36 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>magicmirror 🪞✨</title>
     <style>
-        /* import fonts FIRST */
-        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600&family=Karla:wght@300;400;600&display=swap');
-
-        /* back to wtmt pill */
         .home-link {
-          position: fixed;
-          top: 12px;
-          left: 12px;
-          z-index: 110;
-          padding: 6px 14px;
-          border-radius: 999px;
-          background: rgba(250, 249, 246, 0.85);
-          backdrop-filter: blur(14px);
-          -webkit-backdrop-filter: blur(14px);
-          border: 1px solid rgba(255, 255, 255, 0.8);
-          font-family: 'Karla', system-ui, -apple-system, sans-serif;
-          font-size: 0.78rem;
-          color: #5a5a5a;
-          text-decoration: none;
-          text-transform: lowercase;
-          box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+            position: fixed;
+            top: 12px;
+            left: 12px;
+            z-index: 110;
+            padding: 6px 14px;
+            border-radius: 999px;
+            background: rgba(250, 249, 246, 0.85);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            font-family: 'Karla', system-ui, -apple-system, sans-serif;
+            font-size: 0.78rem;
+            color: #5a5a5a;
+            text-decoration: none;
+            text-transform: lowercase;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
         }
 
         .home-link:hover {
-          text-decoration: none;
-          transform: translateY(-1px);
+            text-decoration: none;
+            transform: translateY(-1px);
         }
 
         @media (hover: none) and (pointer: coarse) {
-          .home-link { display: none; }
+            .home-link { display: none; }
         }
 
-        /* ========================================
-           GLOBAL / TOKENS
-        ======================================== */
-
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600&family=Karla:wght@300;400;600&display=swap');
+        
         * {
             margin: 0;
             padding: 0;
@@ -692,7 +686,7 @@
         }
 
         /* ========================================
-           RESULT VIEW CARD
+           WTMT RESULT VIEW (MM-CARD STYLE)
         ======================================== */
         .mm-card {
             width: 100%;
@@ -856,6 +850,10 @@
             background: rgba(255, 255, 255, .9);
         }
 
+        .mm-action-btn:active {
+            transform: translateY(0);
+        }
+
         .action-icon {
             font-size: 1.3em;
             flex-shrink: 0;
@@ -958,9 +956,6 @@
             box-shadow: 0 3px 12px rgba(227, 194, 125, 0.3);
         }
 
-        /* ========================================
-           BUY ME A COFFEE BUTTON
-        ======================================== */
         .bmac-button {
             position: fixed;
             bottom: var(--space-sm);
@@ -1007,9 +1002,6 @@
             text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
         }
 
-        /* ========================================
-           RESPONSIVE & ACCESSIBILITY
-        ======================================== */
         @media (max-width: 480px) {
             body { padding: var(--space-sm); }
             .logo { font-size: var(--font-h2-desktop); }
@@ -1056,7 +1048,6 @@
     </style>
 </head>
 <body>
-    <!-- back to homepage -->
     <a href="https://withouttoomuchthought.com" class="home-link">← back to wtmt</a>
 
     <!-- Custom Cursor (desktop only) -->
@@ -1146,7 +1137,6 @@
                 </p>
 
                 <footer class="mm-actions">
-                    <button class="mm-btn" id="speakBtn" aria-pressed="false">play voice</button>
                     <button class="mm-btn" id="copyBtn">copy</button>
                 </footer>
 
@@ -1193,9 +1183,7 @@
     <a href="https://www.withouttoomuchthought.com" class="wtmt-link">withouttoomuchthought.com</a>
 
     <script>
-        // ========================================
-        // CONFIGURATION
-        // ========================================
+        // CONFIG
         const WEBHOOK_URL = 'https://magicmirror.withouttoomuchthought.workers.dev/';
         const DEBUG = new URLSearchParams(window.location.search).get('debug') === 'true';
         
@@ -1203,7 +1191,7 @@
             if (DEBUG) console.log('[magicmirror]', ...args);
         }
 
-        // time-based gradient
+        // TIME-BASED GRADIENTS
         function setTimeBasedGradient() {
             const hour = new Date().getHours();
             const root = document.documentElement;
@@ -1234,7 +1222,7 @@
         setTimeBasedGradient();
         setInterval(setTimeBasedGradient, 3600000);
 
-        // rotating placeholder
+        // ROTATING PLACEHOLDER
         const prompts = [
             "tell me what you're feeling...",
             "what's on your heart?",
@@ -1254,7 +1242,7 @@
         
         setInterval(rotatePrompt, 4000);
 
-        // loading messages
+        // LOADING MESSAGES
         const loadingMessages = [
             "holding your words gently...",
             "seeing what you didn't say...",
@@ -1286,7 +1274,7 @@
             clearInterval(messageInterval);
         }
 
-        // custom cursor
+        // CUSTOM CURSOR
         const cursor = document.querySelector('.custom-cursor');
         const cursorFollower = document.querySelector('.cursor-follower');
         
@@ -1315,7 +1303,7 @@
         
         animateCursor();
 
-        // ripple
+        // RIPPLE EFFECT
         const rippleCanvas = document.getElementById('rippleCanvas');
         const rippleCtx = rippleCanvas.getContext('2d');
         let ripples = [];
@@ -1361,7 +1349,7 @@
         
         animateRipples();
 
-        // card tilt
+        // 3D CARD TILT
         const mainContainer = document.getElementById('mainContainer');
         
         mainContainer.addEventListener('mousemove', (e) => {
@@ -1398,7 +1386,7 @@
             });
         }
 
-        // particles
+        // PARTICLE SYSTEM
         function createParticles() {
             const particleSystem = document.getElementById('particleSystem');
             
@@ -1433,7 +1421,7 @@
             }
         }
 
-        // clouds
+        // CLOUD & QUOTE SYSTEM
         const healingQuotes = [
             "real love doesn't\nkeep score...",
             "you don't have to be strong\nto be worthy...",
@@ -1505,14 +1493,26 @@
                 }
             });
         }
+
+        function shuffledCopy(array) {
+            const copy = array.slice();
+            for (let i = copy.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [copy[i], copy[j]] = [copy[j], copy[i]];
+            }
+            return copy;
+        }
         
         function createQuoteClouds() {
             const frontLayer = document.getElementById('cloudLayerFront');
-            
-            for (let i = 0; i < 8; i++) {
+            const cloudCount = 8;
+            const pool = shuffledCopy(healingQuotes);
+
+            for (let i = 0; i < cloudCount; i++) {
                 const cloud = document.createElement('div');
                 cloud.className = 'quote-cloud';
-                cloud.textContent = healingQuotes[Math.floor(Math.random() * healingQuotes.length)];
+                const quote = pool[i % pool.length];
+                cloud.textContent = quote;
                 
                 const leftPos = Math.random() * 95;
                 const duration = 20 + Math.random() * 15;
@@ -1530,7 +1530,7 @@
             }
         }
 
-        // sparkle
+        // SPARKLES
         function addSparkle() {
             if (Math.random() > 0.4) {
                 const sparkle = document.createElement('div');
@@ -1547,7 +1547,7 @@
         
         setInterval(addSparkle, 3500);
 
-        // celebration burst
+        // CELEBRATION BURST
         function createCelebrationBurst() {
             const particleSystem = document.getElementById('particleSystem');
             
@@ -1575,12 +1575,12 @@
             }
         }
 
-        // init visuals
+        // INIT EFFECTS
         createParticles();
         createCloudLayers();
         createQuoteClouds();
 
-        // small toast
+        // TOAST
         function toast(msg) {
             const t = document.createElement('div');
             t.textContent = msg;
@@ -1606,7 +1606,7 @@
             }, 1200);
         }
 
-        // copy button
+        // COPY BUTTON
         document.getElementById('copyBtn').addEventListener('click', async () => {
             const textOnly = document.getElementById('transformedText').innerText.trim();
             try {
@@ -1617,40 +1617,7 @@
             }
         });
 
-        // voice button
-        let speaking = false, utterance;
-        document.getElementById('speakBtn').addEventListener('click', () => {
-            const btn = document.getElementById('speakBtn');
-            const text = document.getElementById('transformedText').innerText;
-            if (!('speechSynthesis' in window)) {
-                toast('voice not supported');
-                return;
-            }
-
-            if (speaking) {
-                window.speechSynthesis.cancel();
-                speaking = false;
-                btn.textContent = 'play voice';
-                btn.setAttribute('aria-pressed', 'false');
-            } else {
-                utterance = new SpeechSynthesisUtterance(text);
-                utterance.rate = 0.98;
-                utterance.pitch = 1.0;
-                utterance.volume = 1.0;
-                utterance.onend = () => {
-                    speaking = false;
-                    btn.textContent = 'play voice';
-                    btn.setAttribute('aria-pressed', 'false');
-                };
-                window.speechSynthesis.cancel();
-                window.speechSynthesis.speak(utterance);
-                speaking = true;
-                btn.textContent = 'pause voice';
-                btn.setAttribute('aria-pressed', 'true');
-            }
-        });
-
-        // submission logic
+        // MAIN SUBMISSION LOGIC
         let currentUserInput = '';
 
         async function submitThought() {
@@ -1658,6 +1625,11 @@
             
             if (!input) {
                 alert('share something first, love 💛');
+                return;
+            }
+
+            if (WEBHOOK_URL === 'YOUR_CLOUDFLARE_WORKER_URL_HERE') {
+                alert('⚠️ Worker URL not configured yet!\n\nPlease update WEBHOOK_URL in the code.');
                 return;
             }
 
@@ -1700,6 +1672,7 @@
                 
                 document.getElementById('resultView').classList.add('active');
                 createCelebrationBurst();
+                
                 window.scrollTo({ top: 0, behavior: 'smooth' });
 
             } catch (error) {
@@ -1713,7 +1686,7 @@
             }
         }
 
-        // share + download
+        // SHARE & DOWNLOAD
         async function shareToSocial() {
             const canvas = createStoryCanvas();
             
@@ -1886,7 +1859,7 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        // enter key submit
+        // ENTER TO SUBMIT
         document.getElementById('userInput').addEventListener('keydown', function(e) {
             if (e.key === 'Enter' && !e.shiftKey) {
                 e.preventDefault();
