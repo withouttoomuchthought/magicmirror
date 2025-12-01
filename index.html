@@ -5,8 +5,42 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>magicmirror 🪞✨</title>
     <style>
+        /* import fonts FIRST */
         @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600&family=Karla:wght@300;400;600&display=swap');
-        
+
+        /* back to wtmt pill */
+        .home-link {
+          position: fixed;
+          top: 12px;
+          left: 12px;
+          z-index: 110;
+          padding: 6px 14px;
+          border-radius: 999px;
+          background: rgba(250, 249, 246, 0.85);
+          backdrop-filter: blur(14px);
+          -webkit-backdrop-filter: blur(14px);
+          border: 1px solid rgba(255, 255, 255, 0.8);
+          font-family: 'Karla', system-ui, -apple-system, sans-serif;
+          font-size: 0.78rem;
+          color: #5a5a5a;
+          text-decoration: none;
+          text-transform: lowercase;
+          box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+        }
+
+        .home-link:hover {
+          text-decoration: none;
+          transform: translateY(-1px);
+        }
+
+        @media (hover: none) and (pointer: coarse) {
+          .home-link { display: none; }
+        }
+
+        /* ========================================
+           GLOBAL / TOKENS
+        ======================================== */
+
         * {
             margin: 0;
             padding: 0;
@@ -658,7 +692,7 @@
         }
 
         /* ========================================
-           WTMT RESULT VIEW (MM-CARD STYLE)
+           RESULT VIEW CARD
         ======================================== */
         .mm-card {
             width: 100%;
@@ -673,7 +707,6 @@
             border: 1px solid rgba(255, 255, 255, .8);
         }
 
-        /* Header */
         .mm-head {
             display: flex;
             align-items: center;
@@ -698,7 +731,6 @@
             text-transform: lowercase;
         }
 
-        /* Mirror bezel + loading spin */
         .mm-mirror {
             position: relative;
             border-radius: 16px;
@@ -714,7 +746,6 @@
             transform-origin: 50% 52%;
         }
 
-        /* User input whisper (optional, can be removed if not showing original input) */
         .mm-whisper {
             font-size: 12px;
             color: var(--text);
@@ -738,7 +769,6 @@
             opacity: 0.8;
         }
 
-        /* Content text */
         .mm-text {
             font-size: clamp(17px, 1.25rem, 20px);
             line-height: 1.7;
@@ -764,7 +794,6 @@
             font-style: italic;
         }
 
-        /* Footer actions (minimal style) */
         .mm-actions {
             display: flex;
             gap: 8px;
@@ -801,7 +830,6 @@
             transform: translateY(0);
         }
 
-        /* Action buttons for share/download - simpler style */
         .mm-action-btn {
             appearance: none;
             border: none;
@@ -826,10 +854,6 @@
             transform: translateY(-1px);
             box-shadow: 0 4px 14px rgba(0, 0, 0, .08);
             background: rgba(255, 255, 255, .9);
-        }
-
-        .mm-action-btn:active {
-            transform: translateY(0);
         }
 
         .action-icon {
@@ -857,7 +881,6 @@
             line-height: 1.3;
         }
 
-        /* Try again button - minimal */
         .mm-try-again {
             appearance: none;
             margin-top: 12px;
@@ -885,7 +908,6 @@
             transform: scale(0.98);
         }
 
-        /* AI disclaimer - minimal */
         .mm-disclaimer {
             font-size: 0.72em;
             color: var(--text);
@@ -897,7 +919,6 @@
             line-height: 1.4;
         }
 
-        /* Support box - simpler */
         .support-box {
             margin-top: 16px;
             padding: 16px;
@@ -938,7 +959,7 @@
         }
 
         /* ========================================
-           BUY ME A COFFEE - FLOATING BUTTON
+           BUY ME A COFFEE BUTTON
         ======================================== */
         .bmac-button {
             position: fixed;
@@ -973,9 +994,6 @@
             margin: 0;
         }
 
-        /* ========================================
-           FOOTER LINK
-        ======================================== */
         .wtmt-link {
             position: fixed;
             bottom: var(--space-sm);
@@ -990,7 +1008,7 @@
         }
 
         /* ========================================
-           RESPONSIVE
+           RESPONSIVE & ACCESSIBILITY
         ======================================== */
         @media (max-width: 480px) {
             body { padding: var(--space-sm); }
@@ -1007,9 +1025,6 @@
             }
         }
 
-        /* ========================================
-           REDUCED MOTION SUPPORT
-        ======================================== */
         @media (prefers-reduced-motion: reduce) {
             *,
             *::before,
@@ -1027,7 +1042,6 @@
             }
         }
 
-        /* Accessibility */
         .sr-only {
             position: absolute;
             width: 1px;
@@ -1042,6 +1056,9 @@
     </style>
 </head>
 <body>
+    <!-- back to homepage -->
+    <a href="https://withouttoomuchthought.com" class="home-link">← back to wtmt</a>
+
     <!-- Custom Cursor (desktop only) -->
     <div class="custom-cursor"></div>
     <div class="cursor-follower"></div>
@@ -1107,7 +1124,7 @@
             <div class="loading-emoji">🪞✨</div>
         </div>
 
-        <!-- Result View (WTMT MM-CARD STYLE) -->
+        <!-- Result View -->
         <div id="resultView" class="view">
             <article class="mm-card" role="region" aria-labelledby="mm-title">
                 <header class="mm-head">
@@ -1115,33 +1132,24 @@
                     <h2 class="mm-title" id="mm-title">magicmirror</h2>
                 </header>
 
-                <!-- User's original input (soft whisper) -->
                 <div class="mm-whisper">you wrote:</div>
                 <div class="mm-user-input" id="userInputDisplay"></div>
 
-                <!-- Mirror frame with transformed text -->
                 <section class="mm-mirror" id="mm-mirror">
                     <div class="sr-only" aria-live="polite" id="mm-live"></div>
-                    
-                    <div class="mm-text" id="transformedText">
-                        <!-- AI transformed text appears here -->
-                    </div>
-
+                    <div class="mm-text" id="transformedText"></div>
                     <p class="mm-subtle" id="mm-subtle">a soft reflection by wtmt · just now</p>
                 </section>
 
-                <!-- AI disclaimer -->
                 <p class="mm-disclaimer">
                     these reflections come from ai. take what resonates, leave what doesn't. trust your own truth first 💛
                 </p>
 
-                <!-- Footer actions (copy/voice buttons only) -->
                 <footer class="mm-actions">
                     <button class="mm-btn" id="speakBtn" aria-pressed="false">play voice</button>
                     <button class="mm-btn" id="copyBtn">copy</button>
                 </footer>
 
-                <!-- Share/Download actions -->
                 <button class="mm-action-btn" onclick="shareToSocial()">
                     <div class="action-icon">🌸</div>
                     <div class="action-content">
@@ -1158,7 +1166,6 @@
                     </div>
                 </button>
 
-                <!-- Support box -->
                 <div class="support-box">
                     <p class="support-text">
                         if this reflection held something for you,<br>
@@ -1169,7 +1176,6 @@
                     </a>
                 </div>
 
-                <!-- Try again button -->
                 <button class="mm-try-again" onclick="tryAgain()">
                     share another truth 🪞
                 </button>
@@ -1190,7 +1196,6 @@
         // ========================================
         // CONFIGURATION
         // ========================================
-        
         const WEBHOOK_URL = 'https://magicmirror.withouttoomuchthought.workers.dev/';
         const DEBUG = new URLSearchParams(window.location.search).get('debug') === 'true';
         
@@ -1198,10 +1203,7 @@
             if (DEBUG) console.log('[magicmirror]', ...args);
         }
 
-        // ========================================
-        // TIME-BASED GRADIENTS
-        // ========================================
-        
+        // time-based gradient
         function setTimeBasedGradient() {
             const hour = new Date().getHours();
             const root = document.documentElement;
@@ -1232,10 +1234,7 @@
         setTimeBasedGradient();
         setInterval(setTimeBasedGradient, 3600000);
 
-        // ========================================
-        // ROTATING PLACEHOLDER TEXT
-        // ========================================
-        
+        // rotating placeholder
         const prompts = [
             "tell me what you're feeling...",
             "what's on your heart?",
@@ -1255,10 +1254,7 @@
         
         setInterval(rotatePrompt, 4000);
 
-        // ========================================
-        // SEQUENTIAL LOADING MESSAGES
-        // ========================================
-        
+        // loading messages
         const loadingMessages = [
             "holding your words gently...",
             "seeing what you didn't say...",
@@ -1290,10 +1286,7 @@
             clearInterval(messageInterval);
         }
 
-        // ========================================
-        // CUSTOM CURSOR (desktop only)
-        // ========================================
-        
+        // custom cursor
         const cursor = document.querySelector('.custom-cursor');
         const cursorFollower = document.querySelector('.cursor-follower');
         
@@ -1322,10 +1315,7 @@
         
         animateCursor();
 
-        // ========================================
-        // RIPPLE EFFECT ON CLICK
-        // ========================================
-        
+        // ripple
         const rippleCanvas = document.getElementById('rippleCanvas');
         const rippleCtx = rippleCanvas.getContext('2d');
         let ripples = [];
@@ -1371,10 +1361,7 @@
         
         animateRipples();
 
-        // ========================================
-        // 3D CARD TILT
-        // ========================================
-        
+        // card tilt
         const mainContainer = document.getElementById('mainContainer');
         
         mainContainer.addEventListener('mousemove', (e) => {
@@ -1411,10 +1398,7 @@
             });
         }
 
-        // ========================================
-        // PARTICLE SYSTEM
-        // ========================================
-        
+        // particles
         function createParticles() {
             const particleSystem = document.getElementById('particleSystem');
             
@@ -1449,10 +1433,7 @@
             }
         }
 
-        // ========================================
-        // CLOUD SYSTEM
-        // ========================================
-        
+        // clouds
         const healingQuotes = [
             "real love doesn't\nkeep score...",
             "you don't have to be strong\nto be worthy...",
@@ -1549,10 +1530,7 @@
             }
         }
 
-        // ========================================
-        // SPARKLE INTERVALS
-        // ========================================
-        
+        // sparkle
         function addSparkle() {
             if (Math.random() > 0.4) {
                 const sparkle = document.createElement('div');
@@ -1569,10 +1547,7 @@
         
         setInterval(addSparkle, 3500);
 
-        // ========================================
-        // CELEBRATION PARTICLE BURST
-        // ========================================
-        
+        // celebration burst
         function createCelebrationBurst() {
             const particleSystem = document.getElementById('particleSystem');
             
@@ -1600,18 +1575,12 @@
             }
         }
 
-        // ========================================
-        // INITIALIZE ALL EFFECTS
-        // ========================================
-        
+        // init visuals
         createParticles();
         createCloudLayers();
         createQuoteClouds();
 
-        // ========================================
-        // WTMT MIRROR FUNCTIONS
-        // ========================================
-        
+        // small toast
         function toast(msg) {
             const t = document.createElement('div');
             t.textContent = msg;
@@ -1637,7 +1606,7 @@
             }, 1200);
         }
 
-        // Copy button
+        // copy button
         document.getElementById('copyBtn').addEventListener('click', async () => {
             const textOnly = document.getElementById('transformedText').innerText.trim();
             try {
@@ -1648,7 +1617,7 @@
             }
         });
 
-        // Voice button
+        // voice button
         let speaking = false, utterance;
         document.getElementById('speakBtn').addEventListener('click', () => {
             const btn = document.getElementById('speakBtn');
@@ -1681,10 +1650,7 @@
             }
         });
 
-        // ========================================
-        // MAIN SUBMISSION LOGIC
-        // ========================================
-        
+        // submission logic
         let currentUserInput = '';
 
         async function submitThought() {
@@ -1692,11 +1658,6 @@
             
             if (!input) {
                 alert('share something first, love 💛');
-                return;
-            }
-
-            if (WEBHOOK_URL === 'YOUR_CLOUDFLARE_WORKER_URL_HERE') {
-                alert('⚠️ Worker URL not configured yet!\n\nPlease update WEBHOOK_URL in the code.');
                 return;
             }
 
@@ -1733,21 +1694,12 @@
                     throw new Error('Invalid response format from server');
                 }
                 
-                // Show user's original input
                 document.getElementById('userInputDisplay').innerText = `"${currentUserInput}"`;
-                
-                // Show AI transformation in the mirror
                 document.getElementById('transformedText').innerText = data.transformed;
-                
-                // Update accessibility live region
                 document.getElementById('mm-live').textContent = 'new magicmirror reflection ready';
                 
-                // Show result
                 document.getElementById('resultView').classList.add('active');
-                
-                // CELEBRATION! 🎉
                 createCelebrationBurst();
-                
                 window.scrollTo({ top: 0, behavior: 'smooth' });
 
             } catch (error) {
@@ -1761,10 +1713,7 @@
             }
         }
 
-        // ========================================
-        // SHARE FUNCTIONS
-        // ========================================
-
+        // share + download
         async function shareToSocial() {
             const canvas = createStoryCanvas();
             
@@ -1831,7 +1780,6 @@
             canvas.width = 1080;
             canvas.height = 1920;
             
-            // Gradient background
             const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
             gradient.addColorStop(0, '#B8A8D8');
             gradient.addColorStop(0.25, '#A8B8E8');
@@ -1841,7 +1789,6 @@
             ctx.fillStyle = gradient;
             ctx.fillRect(0, 0, canvas.width, canvas.height);
             
-            // Subtle texture
             ctx.globalAlpha = 0.03;
             for (let i = 0; i < canvas.width; i += 3) {
                 ctx.strokeStyle = '#fff';
@@ -1852,7 +1799,6 @@
             }
             ctx.globalAlpha = 1;
             
-            // Card
             const margin = 100;
             const cardPadding = 60;
             const cardX = margin;
@@ -1869,7 +1815,6 @@
             ctx.fill();
             ctx.shadowColor = 'transparent';
             
-            // Text
             const transformedText = document.getElementById('transformedText').innerText;
             const lines = transformedText.split('\n').filter(line => line.trim());
             
@@ -1912,7 +1857,6 @@
             
             wrapText(lines, textX, textY, textMaxWidth, lineHeight);
             
-            // Signature
             ctx.strokeStyle = 'rgba(0, 0, 0, 0.1)';
             ctx.lineWidth = 1;
             ctx.beginPath();
@@ -1942,10 +1886,7 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        // ========================================
-        // EVENT LISTENERS
-        // ========================================
-
+        // enter key submit
         document.getElementById('userInput').addEventListener('keydown', function(e) {
             if (e.key === 'Enter' && !e.shiftKey) {
                 e.preventDefault();
