@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>safety & privacy · magicmirror</title>
+    <meta name="description" content="how we keep your reflections safe and what to know before using magicmirror.">
+    <meta name="theme-color" content="#B8A8D8">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600&family=Karla:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+```
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    :root {
+        --gradient-1: #B8A8D8;
+        --gradient-2: #A8B8E8;
+        --gradient-3: #B8A8E8;
+        --gradient-4: #C8B8E8;
+        --ink: #2F2F2F;
+        --text: #5A5A5A;
+        --font-title: 'Playfair Display', serif;
+        --font-body: 'Karla', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    body {
+        font-family: var(--font-body);
+        background: linear-gradient(135deg, var(--gradient-1) 0%, var(--gradient-2) 35%, var(--gradient-3) 65%, var(--gradient-4) 100%);
+        background-attachment: fixed;
+        min-height: 100vh;
+        color: var(--text);
+        line-height: 1.8;
+        padding: 40px 20px;
+        -webkit-font-smoothing: antialiased;
+    }
+
+    .container {
+        max-width: 700px;
+        margin: 0 auto;
+    }
+
+    .back-link {
+        display: inline-block;
+        margin-bottom: 40px;
+        padding: 10px 20px;
+        background: rgba(255, 255, 255, 0.5);
+        backdrop-filter: blur(15px);
+        border-radius: 30px;
+        color: var(--ink);
+        text-decoration: none;
+        font-size: 0.9rem;
+        transition: all 0.3s ease;
+    }
+
+    .back-link:hover {
+        background: rgba(255, 255, 255, 0.7);
+        transform: translateY(-2px);
+    }
+
+    .main-card {
+        background: rgba(255, 255, 255, 0.4);
+        backdrop-filter: blur(25px);
+        border-radius: 30px;
+        padding: 50px 40px;
+        border: 1px solid rgba(255, 255, 255, 0.5);
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+    }
+
+    .page-icon {
+        font-size: 3rem;
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    h1 {
+        font-family: var(--font-title);
+        font-size: clamp(1.8rem, 5vw, 2.5rem);
+        font-weight: 500;
+        color: var(--ink);
+        text-align: center;
+        margin-bottom: 15px;
+    }
+
+    .subtitle {
+        text-align: center;
+        font-size: 1.1rem;
+        color: var(--text);
+        margin-bottom: 40px;
+        font-style: italic;
+    }
+
+    .section {
+        margin-bottom: 35px;
+    }
+
+    h2 {
+        font-family: var(--font-title);
+        font-size: 1.3rem;
+        font-weight: 500;
+        color: var(--ink);
+        margin-bottom: 15px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    p {
+        font-size: 1rem;
+        line-height: 1.9;
+        margin-bottom: 15px;
+        color: var(--text);
+    }
+
+    ul {
+        list-style: none;
+        padding-left: 0;
+    }
+
+    li {
+        padding: 8px 0;
+        padding-left: 25px;
+        position: relative;
+        font-size: 1rem;
+        line-height: 1.7;
+    }
+
+    li::before {
+        content: "·";
+        position: absolute;
+        left: 8px;
+        color: var(--gradient-1);
+        font-weight: bold;
+    }
+
+    .highlight-box {
+        background: rgba(255, 255, 255, 0.4);
+        border-radius: 20px;
+        padding: 25px;
+        margin: 25px 0;
+        border-left: 4px solid rgba(184, 168, 216, 0.6);
+    }
+
+    .highlight-box p {
+        margin-bottom: 0;
+        font-style: italic;
+    }
+
+    .crisis-box {
+        background: linear-gradient(135deg, rgba(255, 232, 232, 0.5), rgba(255, 220, 220, 0.4));
+        border-radius: 20px;
+        padding: 25px;
+        margin: 25px 0;
+        border: 1px solid rgba(255, 200, 200, 0.4);
+    }
+
+    .crisis-box h3 {
+        font-family: var(--font-title);
+        font-size: 1.1rem;
+        color: var(--ink);
+        margin-bottom: 12px;
+    }
+
+    .crisis-box p {
+        margin-bottom: 10px;
+    }
+
+    .crisis-box a {
+        color: var(--ink);
+        font-weight: 500;
+    }
+
+    .footer-note {
+        text-align: center;
+        font-size: 0.9rem;
+        color: var(--text);
+        margin-top: 40px;
+        padding-top: 30px;
+        border-top: 1px solid rgba(255, 255, 255, 0.4);
+        font-style: italic;
+    }
+
+    @media (max-width: 600px) {
+        .main-card {
+            padding: 35px 25px;
+        }
+    }
+</style>
+```
+
+</head>
+<body>
+    <div class="container">
+        <a href="https://magicmirror.withouttoomuchthought.com" class="back-link">← back to magicmirror</a>
+
+```
+    <div class="main-card">
+        <div class="page-icon">🔮</div>
+        <h1>safety & privacy</h1>
+        <p class="subtitle">what to know before you share your truth</p>
+
+        <div class="section">
+            <h2>🌙 what is magicmirror?</h2>
+            <p>
+                magicmirror is a free reflection tool that uses ai (specifically claude by anthropic) to gently transform your thoughts into softer, kinder reflections.
+            </p>
+            <p>
+                it's a creative space for self-expression — not therapy, not advice, not a replacement for professional support.
+            </p>
+        </div>
+
+        <div class="section">
+            <h2>🔒 your privacy</h2>
+            <p>here's how we handle what you share:</p>
+            <ul>
+                <li><strong>anonymous by design</strong> — we don't collect your name, email, or any identifying information</li>
+                <li><strong>your words are processed by ai</strong> — when you press "transform," your text is sent to claude (anthropic's ai) to generate your reflection</li>
+                <li><strong>we store reflections</strong> — your original text and the ai response are saved to help us improve the experience and see how people use the tool</li>
+                <li><strong>no tracking or ads</strong> — we don't use cookies for advertising or track you across the web</li>
+                <li><strong>we can't identify you</strong> — since we don't collect personal info, we can't connect your reflections to you as a person</li>
+            </ul>
+            
+            <div class="highlight-box">
+                <p>💛 please don't share sensitive personal information like full names, addresses, phone numbers, or financial details. while we keep things anonymous, it's best to protect yourself.</p>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>🤖 about the ai</h2>
+            <p>
+                the reflections you receive are generated by artificial intelligence. this means:
+            </p>
+            <ul>
+                <li>responses are created in the moment based on what you write</li>
+                <li>the ai aims to be gentle and supportive, but it's not perfect</li>
+                <li>reflections are not professional advice — they're creative reframes</li>
+                <li>take what resonates, leave what doesn't — you know your truth best</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>💜 who this is for</h2>
+            <p>
+                magicmirror is designed for adults (18+) looking for a gentle creative tool for self-reflection.
+            </p>
+            <p>
+                if you're under 18, please use this with a parent or guardian's awareness.
+            </p>
+        </div>
+
+        <div class="crisis-box">
+            <h3>🤍 if you're struggling</h3>
+            <p>
+                magicmirror is not a crisis service or mental health tool. if you're experiencing a mental health emergency or having thoughts of self-harm, please reach out to real support:
+            </p>
+            <p>
+                <strong>988 suicide & crisis lifeline:</strong> call or text <a href="tel:988">988</a> (US)<br>
+                <strong>crisis text line:</strong> text HOME to <a href="sms:741741">741741</a><br>
+                <strong>international association for suicide prevention:</strong> <a href="https://www.iasp.info/resources/Crisis_Centres/" target="_blank">find your country's helpline</a>
+            </p>
+            <p>
+                you deserve real human support. please reach out. 💛
+            </p>
+        </div>
+
+        <div class="section">
+            <h2>✨ using magicmirror</h2>
+            <p>by using magicmirror, you understand that:</p>
+            <ul>
+                <li>this is a creative tool, not therapy or professional advice</li>
+                <li>your text is processed by ai and may be stored anonymously</li>
+                <li>we're not responsible for how you interpret or use the reflections</li>
+                <li>the tool is provided "as is" — we do our best, but can't guarantee perfection</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>💌 questions?</h2>
+            <p>
+                if you have concerns about privacy or anything else, reach out:<br>
+                <strong>withouttoomuchthought@gmail.com</strong>
+            </p>
+        </div>
+
+        <p class="footer-note">
+            last updated: december 2024<br>
+            made with love by withouttoomuchthought 🤍
+        </p>
+    </div>
+</div>
+```
+
+</body>
+</html>
