@@ -70,9 +70,7 @@
             75% { background-position: 50% 0%; }
         }
 
-        /* ========================================
-           BACK BUTTON
-        ======================================== */
+        /* Back Button */
         .back-home {
             position: fixed;
             top: 20px;
@@ -97,9 +95,7 @@
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
         }
 
-        /* ========================================
-           PARTICLES
-        ======================================== */
+        /* Particles */
         .particle-container {
             position: fixed;
             top: 0;
@@ -140,16 +136,10 @@
         }
 
         @keyframes floatUp {
-            0% {
-                transform: translateY(100vh) translateX(0) scale(0);
-                opacity: 0;
-            }
+            0% { transform: translateY(100vh) translateX(0) scale(0); opacity: 0; }
             10% { opacity: 0.8; transform: translateY(90vh) scale(1); }
             90% { opacity: 0.6; }
-            100% {
-                transform: translateY(-50px) translateX(var(--drift, 0px)) scale(0.5);
-                opacity: 0;
-            }
+            100% { transform: translateY(-50px) translateX(var(--drift, 0px)) scale(0.5); opacity: 0; }
         }
 
         /* ========================================
@@ -310,10 +300,6 @@
             box-shadow: 0 12px 40px rgba(217, 215, 243, 0.7);
         }
 
-        .enter-btn:active {
-            transform: translateY(-1px);
-        }
-
         .coming-soon {
             margin-top: 30px;
             font-size: 0.95rem;
@@ -352,18 +338,17 @@
             color: var(--ink);
         }
 
-        /* Input View */
         .mirror-container {
             width: 100%;
             max-width: 550px;
             margin: 0 auto;
         }
 
-        .input-view, .result-view {
+        .input-view, .loading-view, .result-view {
             display: none;
         }
 
-        .input-view.active, .result-view.active {
+        .input-view.active, .loading-view.active, .result-view.active {
             display: block;
             animation: fadeIn 0.6s ease;
         }
@@ -450,21 +435,12 @@
             cursor: not-allowed;
         }
 
-        /* Loading State */
-        .loading-view {
-            display: none;
-            text-align: center;
-            padding: 60px 30px;
-        }
-
-        .loading-view.active {
-            display: block;
-        }
-
+        /* Loading */
         .loading-icon {
             font-size: 4rem;
             margin-bottom: 25px;
             animation: pulse 2s ease-in-out infinite;
+            text-align: center;
         }
 
         @keyframes pulse {
@@ -477,9 +453,10 @@
             color: var(--text-soft);
             font-style: italic;
             line-height: 1.8;
+            text-align: center;
         }
 
-        /* Result View */
+        /* Result */
         .result-card {
             background: rgba(255, 255, 255, 0.55);
             backdrop-filter: blur(25px);
@@ -594,24 +571,10 @@
             transform: translateX(5px);
         }
 
-        .share-btn-icon {
-            font-size: 1.3rem;
-        }
-
-        .share-btn-text {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .share-btn-title {
-            font-weight: 500;
-            color: var(--ink);
-        }
-
-        .share-btn-desc {
-            font-size: 0.8rem;
-            color: var(--text-soft);
-        }
+        .share-btn-icon { font-size: 1.3rem; }
+        .share-btn-text { display: flex; flex-direction: column; }
+        .share-btn-title { font-weight: 500; color: var(--ink); }
+        .share-btn-desc { font-size: 0.8rem; color: var(--text-soft); }
 
         /* Support Box */
         .support-box {
@@ -644,7 +607,7 @@
             transform: translateY(-2px);
         }
 
-        /* Try Again Button */
+        /* Try Again */
         .try-again-btn {
             width: 100%;
             padding: 16px;
@@ -663,7 +626,7 @@
             color: white;
         }
 
-        /* Toast Notification */
+        /* Toast */
         .toast {
             position: fixed;
             bottom: 30px;
@@ -683,48 +646,24 @@
             transform: translateX(-50%) translateY(0);
         }
 
-        /* ========================================
-           RESPONSIVE
-        ======================================== */
+        /* Responsive */
         @media (max-width: 600px) {
-            .landing-page {
-                padding: 40px 20px;
-            }
-
-            .landing-card {
-                padding: 35px 25px;
-            }
-
-            .landing-icon {
-                font-size: 4rem;
-            }
-
-            .mirror-card, .result-card {
-                padding: 30px 22px;
-            }
-
-            .action-buttons {
-                flex-direction: column;
-            }
-
-            .action-btn {
-                width: 100%;
-            }
+            .landing-page { padding: 40px 20px; }
+            .landing-card { padding: 35px 25px; }
+            .landing-icon { font-size: 4rem; }
+            .mirror-card, .result-card { padding: 30px 22px; }
+            .action-buttons { flex-direction: column; }
+            .action-btn { width: 100%; }
         }
 
-        /* ========================================
-           REDUCED MOTION
-        ======================================== */
+        /* Reduced Motion */
         @media (prefers-reduced-motion: reduce) {
             *, *::before, *::after {
                 animation-duration: 0.01ms !important;
                 animation-iteration-count: 1 !important;
                 transition-duration: 0.01ms !important;
             }
-
-            .particle-container {
-                display: none;
-            }
+            .particle-container { display: none; }
         }
     </style>
 </head>
@@ -735,7 +674,9 @@
     <!-- Particles -->
     <div class="particle-container" id="particles"></div>
 
-    <!-- Landing Page -->
+    <!-- ========================================
+         LANDING PAGE
+    ======================================== -->
     <section class="landing-page" id="landing">
         <div class="landing-icon">🔮</div>
         <h1 class="landing-title">magicmirror</h1>
@@ -794,7 +735,9 @@
         <p class="coming-soon">💫 coming soon: memory mirror · color this truth</p>
     </section>
 
-    <!-- Mirror App -->
+    <!-- ========================================
+         MIRROR APP
+    ======================================== -->
     <section class="mirror-app" id="mirror">
         <div class="mirror-header">
             <div class="mirror-header-icon">🪞</div>
@@ -843,7 +786,7 @@
                         these reflections come from ai. take what resonates, leave what doesn't. trust your own truth first 💛
                     </p>
 
-                    <!-- Action Buttons -->
+                    <!-- Action Buttons - NO VOICE BUTTON -->
                     <div class="action-buttons">
                         <button class="action-btn" id="copyBtn">copy</button>
                     </div>
@@ -883,7 +826,7 @@
     <!-- Toast -->
     <div class="toast" id="toast"></div>
 
-    <!-- Hidden Canvas for Download -->
+    <!-- Hidden Canvas -->
     <canvas id="downloadCanvas" style="display: none;"></canvas>
 
     <script>
@@ -907,7 +850,6 @@
                 }
             });
         }
-
         createParticles();
 
         // ========================================
@@ -937,7 +879,6 @@
             "what does your heart need to release today?",
             "what would feel lighter if you just said it?"
         ];
-
         userInput.placeholder = placeholders[Math.floor(Math.random() * placeholders.length)];
 
         // Loading messages
@@ -965,11 +906,9 @@
             const input = userInput.value.trim();
             if (!input) return;
 
-            // Show loading
             inputView.classList.remove('active');
             loadingView.classList.add('active');
 
-            // Cycle through loading messages
             let msgIndex = 0;
             const loadingInterval = setInterval(() => {
                 msgIndex = (msgIndex + 1) % loadingMessages.length;
@@ -989,7 +928,6 @@
                 if (data.reflection) {
                     originalText.textContent = `"${input}"`;
                     reflectionText.textContent = data.reflection;
-
                     loadingView.classList.remove('active');
                     resultView.classList.add('active');
                 } else {
@@ -1024,18 +962,16 @@
                 try {
                     await navigator.share({ text });
                 } catch (e) {
-                    fallbackCopy(text);
+                    navigator.clipboard.writeText(text).then(() => {
+                        showToast('copied for sharing 💜');
+                    });
                 }
             } else {
-                fallbackCopy(text);
+                navigator.clipboard.writeText(text).then(() => {
+                    showToast('copied for sharing 💜');
+                });
             }
         });
-
-        function fallbackCopy(text) {
-            navigator.clipboard.writeText(text).then(() => {
-                showToast('copied for sharing 💜');
-            });
-        }
 
         // ========================================
         // DOWNLOAD AS ART
@@ -1044,7 +980,6 @@
             const canvas = document.getElementById('downloadCanvas');
             const ctx = canvas.getContext('2d');
 
-            // Story size (1080x1920)
             canvas.width = 1080;
             canvas.height = 1920;
 
@@ -1057,7 +992,6 @@
             ctx.fillStyle = gradient;
             ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-            // Settings
             ctx.textAlign = 'center';
             ctx.fillStyle = '#2F2F2F';
 
@@ -1073,7 +1007,7 @@
             ctx.font = '400 42px Karla, sans-serif';
             ctx.fillStyle = '#3A3A3A';
             const text = reflectionText.textContent;
-            const lines = wrapText(ctx, text, canvas.width - 160, 42);
+            const lines = wrapText(ctx, text, canvas.width - 160);
             
             const startY = 580;
             const lineHeight = 72;
@@ -1088,7 +1022,6 @@
             ctx.font = '28px Karla, sans-serif';
             ctx.fillText('@withouttoomuchthought', canvas.width / 2, canvas.height - 120);
 
-            // Download
             const link = document.createElement('a');
             link.download = 'magicmirror-reflection.png';
             link.href = canvas.toDataURL('image/png');
@@ -1097,7 +1030,7 @@
             showToast('saved to your photos 💜');
         });
 
-        function wrapText(ctx, text, maxWidth, fontSize) {
+        function wrapText(ctx, text, maxWidth) {
             const words = text.split(' ');
             const lines = [];
             let currentLine = '';
@@ -1128,7 +1061,6 @@
             resultView.classList.remove('active');
             inputView.classList.add('active');
 
-            // Scroll to mirror section
             document.getElementById('mirror').scrollIntoView({ behavior: 'smooth' });
         });
 
@@ -1138,9 +1070,7 @@
         function showToast(message) {
             toast.textContent = message;
             toast.classList.add('show');
-            setTimeout(() => {
-                toast.classList.remove('show');
-            }, 3000);
+            setTimeout(() => { toast.classList.remove('show'); }, 3000);
         }
 
         // ========================================
@@ -1151,9 +1081,7 @@
             document.getElementById('mirror').scrollIntoView({ behavior: 'smooth' });
         });
 
-        // ========================================
-        // CONSOLE MESSAGE
-        // ========================================
+        // Console
         console.log('%c🪞 magicmirror', 'font-size: 14px; color: #5A5A5A;');
         console.log('%ca soft reflection portal by wtmt', 'font-size: 12px; color: #888; font-style: italic;');
     </script>
