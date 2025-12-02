@@ -22,6 +22,10 @@
         -webkit-tap-highlight-color: transparent;
     }
 
+    html {
+        overflow-x: hidden;
+    }
+
     :root {
         --butter: #FDF2B3;
         --peach: #FAD4C0;
@@ -329,6 +333,8 @@
         animation: driftQuoteCloud linear infinite;
         opacity: 0;
         max-width: 200px;
+        z-index: 1;
+        pointer-events: none;
     }
 
     @keyframes driftParallax {
@@ -675,17 +681,21 @@
     .mirror-app {
         min-height: 100vh;
         padding: var(--space-md);
+        padding-top: 80px;
         display: flex;
         align-items: center;
         justify-content: center;
         position: relative;
         z-index: 10;
+        box-sizing: border-box;
+        overflow-x: hidden;
     }
 
     .container {
         width: 100%;
         max-width: 500px;
         margin: 0 auto;
+        padding: 0 16px;
         position: relative;
         z-index: 10;
         transition: transform 0.3s ease;
@@ -791,6 +801,9 @@
         position: relative;
         overflow: hidden;
         transition: transform 0.3s ease, box-shadow 0.3s ease;
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
     }
 
     .glass-card:hover {
@@ -805,6 +818,7 @@
     ======================================== */
     textarea {
         width: 100%;
+        max-width: 100%;
         min-height: 180px;
         padding: var(--space-md);
         border: none;
@@ -816,6 +830,7 @@
         color: var(--ink);
         resize: none;
         transition: all 0.3s ease;
+        box-sizing: border-box;
     }
 
     textarea:focus {
@@ -831,6 +846,7 @@
 
     .submit-btn {
         width: 100%;
+        max-width: 100%;
         padding: var(--space-md);
         margin-top: var(--space-md);
         border: none;
@@ -843,6 +859,7 @@
         cursor: pointer;
         transition: all 0.3s ease;
         box-shadow: 0 4px 20px rgba(227, 194, 125, 0.3);
+        box-sizing: border-box;
     }
 
     .submit-btn:hover {
@@ -1165,7 +1182,8 @@
     }
 
     @media (max-width: 480px) {
-        .mirror-app { padding: var(--space-sm); }
+        .mirror-app { padding: 16px; }
+        .container { padding: 0 8px; }
         .logo { font-size: var(--font-h2-desktop); }
         .mm-card { padding: 20px; max-width: 100%; }
         textarea { min-height: 150px; font-size: 1em; }
@@ -1176,6 +1194,10 @@
         .bmac-button {
             padding: 8px 12px;
             font-size: 0.75em;
+        }
+        .glass-card {
+            padding: 20px 16px;
+            margin: 0 4px;
         }
     }
 
